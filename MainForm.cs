@@ -15,22 +15,26 @@ namespace F_Key_Sender
         public MainForm()
         {
             InitializeComponent();
+            this.TopMost = true;
         }
 
         private async void SendKeyCombo(string key)
         {
             bool ctrl = checkBoxCtrl.Checked;
-            bool alt = checkBoxShift.Checked;
+            bool shift = checkBoxShift.Checked;
+            bool alt = checkBoxAlt.Checked;
 
             await Task.Delay((int)nudDelay.Value * 1000); // Convert seconds to milliseconds for the delay.
 
             string command = "";
             if (ctrl) command += "^";
+            if (shift) command += "+";
             if (alt) command += "%";
             command += $"{{{key}}}";
 
             SendKeys.Send(command);
         }
+
 
         private void chkAlwaysOnTop_CheckedChanged(object sender, EventArgs e)
         {

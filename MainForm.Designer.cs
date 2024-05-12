@@ -40,11 +40,12 @@
             this.btnF22 = new System.Windows.Forms.Button();
             this.btnF23 = new System.Windows.Forms.Button();
             this.btnF24 = new System.Windows.Forms.Button();
-            this.checkBoxShift = new F_Key_Sender.BigCheckBox();
-            this.checkBoxCtrl = new F_Key_Sender.BigCheckBox();
             this.nudDelay = new System.Windows.Forms.NumericUpDown();
             this.labelDelay = new System.Windows.Forms.Label();
+            this.checkBoxAlt = new F_Key_Sender.BigCheckBox();
             this.chkAlwaysOnTop = new F_Key_Sender.BigCheckBox();
+            this.checkBoxShift = new F_Key_Sender.BigCheckBox();
+            this.checkBoxCtrl = new F_Key_Sender.BigCheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.nudDelay)).BeginInit();
             this.SuspendLayout();
             // 
@@ -180,32 +181,10 @@
             this.btnF24.UseVisualStyleBackColor = true;
             this.btnF24.Click += new System.EventHandler(this.btnF24_Click);
             // 
-            // checkBoxShift
-            // 
-            this.checkBoxShift.CheckboxSize = 40;
-            this.checkBoxShift.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxShift.Location = new System.Drawing.Point(257, 208);
-            this.checkBoxShift.Name = "checkBoxShift";
-            this.checkBoxShift.Size = new System.Drawing.Size(143, 56);
-            this.checkBoxShift.TabIndex = 13;
-            this.checkBoxShift.Text = "Shift";
-            this.checkBoxShift.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // checkBoxCtrl
-            // 
-            this.checkBoxCtrl.CheckboxSize = 40;
-            this.checkBoxCtrl.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxCtrl.Location = new System.Drawing.Point(57, 208);
-            this.checkBoxCtrl.Name = "checkBoxCtrl";
-            this.checkBoxCtrl.Size = new System.Drawing.Size(143, 56);
-            this.checkBoxCtrl.TabIndex = 12;
-            this.checkBoxCtrl.Text = "Ctrl";
-            this.checkBoxCtrl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // nudDelay
             // 
             this.nudDelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.nudDelay.Location = new System.Drawing.Point(242, 279);
+            this.nudDelay.Location = new System.Drawing.Point(244, 264);
             this.nudDelay.Maximum = new decimal(new int[] {
             10,
             0,
@@ -225,29 +204,66 @@
             // 
             this.labelDelay.AutoSize = true;
             this.labelDelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelDelay.Location = new System.Drawing.Point(82, 281);
+            this.labelDelay.Location = new System.Drawing.Point(84, 266);
             this.labelDelay.Name = "labelDelay";
             this.labelDelay.Size = new System.Drawing.Size(154, 24);
             this.labelDelay.TabIndex = 15;
             this.labelDelay.Text = "Delay (Seconds):";
             // 
+            // checkBoxAlt
+            // 
+            this.checkBoxAlt.CheckboxSize = 40;
+            this.checkBoxAlt.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBoxAlt.Location = new System.Drawing.Point(158, 193);
+            this.checkBoxAlt.Name = "checkBoxAlt";
+            this.checkBoxAlt.Size = new System.Drawing.Size(94, 56);
+            this.checkBoxAlt.TabIndex = 16;
+            this.checkBoxAlt.Text = "Alt";
+            this.checkBoxAlt.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // chkAlwaysOnTop
             // 
             this.chkAlwaysOnTop.CheckboxSize = 25;
-            this.chkAlwaysOnTop.Location = new System.Drawing.Point(116, 336);
+            this.chkAlwaysOnTop.Checked = true;
+            this.chkAlwaysOnTop.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkAlwaysOnTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkAlwaysOnTop.Location = new System.Drawing.Point(107, 317);
             this.chkAlwaysOnTop.Name = "chkAlwaysOnTop";
-            this.chkAlwaysOnTop.Size = new System.Drawing.Size(146, 25);
+            this.chkAlwaysOnTop.Size = new System.Drawing.Size(193, 25);
             this.chkAlwaysOnTop.TabIndex = 0;
-            this.chkAlwaysOnTop.Text = "Always On Top";
+            this.chkAlwaysOnTop.Text = "Keep Window On Top";
             this.chkAlwaysOnTop.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.chkAlwaysOnTop.UseVisualStyleBackColor = true;
             this.chkAlwaysOnTop.CheckedChanged += new System.EventHandler(this.chkAlwaysOnTop_CheckedChanged);
+            // 
+            // checkBoxShift
+            // 
+            this.checkBoxShift.CheckboxSize = 40;
+            this.checkBoxShift.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBoxShift.Location = new System.Drawing.Point(287, 193);
+            this.checkBoxShift.Name = "checkBoxShift";
+            this.checkBoxShift.Size = new System.Drawing.Size(113, 56);
+            this.checkBoxShift.TabIndex = 13;
+            this.checkBoxShift.Text = "Shift";
+            this.checkBoxShift.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // checkBoxCtrl
+            // 
+            this.checkBoxCtrl.CheckboxSize = 40;
+            this.checkBoxCtrl.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBoxCtrl.Location = new System.Drawing.Point(25, 193);
+            this.checkBoxCtrl.Name = "checkBoxCtrl";
+            this.checkBoxCtrl.Size = new System.Drawing.Size(102, 56);
+            this.checkBoxCtrl.TabIndex = 12;
+            this.checkBoxCtrl.Text = "Ctrl";
+            this.checkBoxCtrl.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(427, 364);
+            this.Controls.Add(this.checkBoxAlt);
             this.Controls.Add(this.chkAlwaysOnTop);
             this.Controls.Add(this.labelDelay);
             this.Controls.Add(this.nudDelay);
@@ -292,5 +308,6 @@
         private System.Windows.Forms.NumericUpDown nudDelay;
         private System.Windows.Forms.Label labelDelay;
         private BigCheckBox chkAlwaysOnTop;
+        private BigCheckBox checkBoxAlt;
     }
 }
