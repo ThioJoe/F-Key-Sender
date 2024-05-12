@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "F Key Sender", "F Key Sender.csproj", "{62590E2D-7B1D-44FD-BDD2-5842178749C6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{62590E2D-7B1D-44FD-BDD2-5842178749C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62590E2D-7B1D-44FD-BDD2-5842178749C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62590E2D-7B1D-44FD-BDD2-5842178749C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62590E2D-7B1D-44FD-BDD2-5842178749C6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AD3FE275-50C7-42A3-980F-EC4B5C33542B}
+	EndGlobalSection
+EndGlobal
