@@ -1,35 +1,40 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
-// This is a custom checkbox control that is larger than the standard checkbox control.
-// Taken from https://stackoverflow.com/a/59192202, slightly modified
 namespace F_Key_Sender
 {
     public class BigCheckBox : CheckBox
     {
+        private int _checkboxSize = 40; // Default size
+
+        public int CheckboxSize
+        {
+            get { return _checkboxSize; }
+            set
+            {
+                _checkboxSize = value;
+                this.Invalidate(); // Redraw the control with the new size
+            }
+        }
+
         public BigCheckBox()
         {
             this.Text = "Ctrl";
             this.TextAlign = ContentAlignment.MiddleRight;
             this.Height = 100;  // Control height
             this.Width = 200;   // Control width
-        }
-
-        public override bool AutoSize
-        {
-            set { base.AutoSize = false; }
-            get { return base.AutoSize; }
+            this.AutoSize = false; // Disable auto-size
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
 
-            // Adjust the size of the checkbox square
-            int squareSide = 40;  // Smaller size for the checkbox
-            int verticalPosition = (this.Height - squareSide) / 2;  // Center vertically
+            // Calculate vertical position to center the checkbox square vertically
+            int verticalPosition = (this.Height - _checkboxSize) / 2;
 
-            Rectangle rect = new Rectangle(new Point(0, verticalPosition), new Size(squareSide, squareSide));
+            // Define the rectangle for the checkbox
+            Rectangle rect = new Rectangle(new Point(0, verticalPosition), new Size(_checkboxSize, _checkboxSize));
 
             // Draw the checkbox
             ControlPaint.DrawCheckBox(e.Graphics, rect, this.Checked ? ButtonState.Checked : ButtonState.Normal);

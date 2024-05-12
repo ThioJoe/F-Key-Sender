@@ -182,6 +182,7 @@
             // 
             // checkBoxShift
             // 
+            this.checkBoxShift.CheckboxSize = 40;
             this.checkBoxShift.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBoxShift.Location = new System.Drawing.Point(257, 208);
             this.checkBoxShift.Name = "checkBoxShift";
@@ -192,6 +193,7 @@
             // 
             // checkBoxCtrl
             // 
+            this.checkBoxCtrl.CheckboxSize = 40;
             this.checkBoxCtrl.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBoxCtrl.Location = new System.Drawing.Point(57, 208);
             this.checkBoxCtrl.Name = "checkBoxCtrl";
@@ -203,7 +205,7 @@
             // nudDelay
             // 
             this.nudDelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.nudDelay.Location = new System.Drawing.Point(242, 287);
+            this.nudDelay.Location = new System.Drawing.Point(242, 279);
             this.nudDelay.Maximum = new decimal(new int[] {
             10,
             0,
@@ -223,7 +225,7 @@
             // 
             this.labelDelay.AutoSize = true;
             this.labelDelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelDelay.Location = new System.Drawing.Point(82, 289);
+            this.labelDelay.Location = new System.Drawing.Point(82, 281);
             this.labelDelay.Name = "labelDelay";
             this.labelDelay.Size = new System.Drawing.Size(154, 24);
             this.labelDelay.TabIndex = 15;
@@ -231,7 +233,8 @@
             // 
             // chkAlwaysOnTop
             // 
-            this.chkAlwaysOnTop.Location = new System.Drawing.Point(12, 335);
+            this.chkAlwaysOnTop.CheckboxSize = 25;
+            this.chkAlwaysOnTop.Location = new System.Drawing.Point(116, 336);
             this.chkAlwaysOnTop.Name = "chkAlwaysOnTop";
             this.chkAlwaysOnTop.Size = new System.Drawing.Size(146, 25);
             this.chkAlwaysOnTop.TabIndex = 0;
