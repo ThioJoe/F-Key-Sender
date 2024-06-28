@@ -194,11 +194,6 @@
             this.nudDelay.Size = new System.Drawing.Size(62, 29);
             this.nudDelay.TabIndex = 14;
             this.nudDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.nudDelay.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
             // 
             // labelDelay
             // 
