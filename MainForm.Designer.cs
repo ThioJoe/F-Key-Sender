@@ -187,7 +187,7 @@
             // nudDelay
             // 
             this.nudDelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.nudDelay.Location = new System.Drawing.Point(244, 264);
+            this.nudDelay.Location = new System.Drawing.Point(181, 264);
             this.nudDelay.Maximum = new decimal(new int[] {
             10,
             0,
@@ -202,7 +202,7 @@
             // 
             this.labelDelay.AutoSize = true;
             this.labelDelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelDelay.Location = new System.Drawing.Point(84, 266);
+            this.labelDelay.Location = new System.Drawing.Point(21, 266);
             this.labelDelay.Name = "labelDelay";
             this.labelDelay.Size = new System.Drawing.Size(154, 24);
             this.labelDelay.TabIndex = 15;
@@ -211,25 +211,25 @@
             // labelMethod
             // 
             this.labelMethod.AutoSize = true;
-            this.labelMethod.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelMethod.Location = new System.Drawing.Point(83, 358);
+            this.labelMethod.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelMethod.Location = new System.Drawing.Point(21, 305);
             this.labelMethod.Name = "labelMethod";
-            this.labelMethod.Size = new System.Drawing.Size(136, 20);
+            this.labelMethod.Size = new System.Drawing.Size(162, 24);
             this.labelMethod.TabIndex = 17;
             this.labelMethod.Text = "Keypress Method:";
             // 
             // dropdownMethod
             // 
             this.dropdownMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.dropdownMethod.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dropdownMethod.FormattingEnabled = true;
             this.dropdownMethod.Items.AddRange(new object[] {
             "SendInput",
-            "Method 2"});
-            this.dropdownMethod.Location = new System.Drawing.Point(216, 357);
+            "keybd_event"});
+            this.dropdownMethod.Location = new System.Drawing.Point(189, 305);
             this.dropdownMethod.Name = "dropdownMethod";
-            this.dropdownMethod.Size = new System.Drawing.Size(148, 21);
+            this.dropdownMethod.Size = new System.Drawing.Size(148, 28);
             this.dropdownMethod.TabIndex = 18;
-            this.dropdownMethod.SelectedIndexChanged += new System.EventHandler(this.dropdownMethod_SelectedIndexChanged);
             // 
             // checkBoxAlt
             // 
@@ -248,7 +248,7 @@
             this.chkAlwaysOnTop.Checked = true;
             this.chkAlwaysOnTop.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkAlwaysOnTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkAlwaysOnTop.Location = new System.Drawing.Point(107, 317);
+            this.chkAlwaysOnTop.Location = new System.Drawing.Point(25, 347);
             this.chkAlwaysOnTop.Name = "chkAlwaysOnTop";
             this.chkAlwaysOnTop.Size = new System.Drawing.Size(193, 25);
             this.chkAlwaysOnTop.TabIndex = 0;

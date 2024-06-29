@@ -15,67 +15,7 @@ namespace F_Key_Sender
     public partial class MainForm : Form
     {
 
-        [DllImport("user32.dll")]
-        static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
-
         // Dictionary to store virtual key codes
-        private static readonly Dictionary<string, byte> virtualKeyCodes = new Dictionary<string, byte>
-        {
-            {"F13", 0x7C},
-            {"F14", 0x7D},
-            {"F15", 0x7E},
-            {"F16", 0x7F},
-            {"F17", 0x80},
-            {"F18", 0x81},
-            {"F19", 0x82},
-            {"F20", 0x83},
-            {"F21", 0x84},
-            {"F22", 0x85},
-            {"F23", 0x86},
-            {"F24", 0x87},
-            {"X", 0x58},
-        };
-
-        private static readonly Dictionary<string, ushort> wscanCodes = new Dictionary<string, ushort>
-        {
-            {"F13", 100},
-            {"F14", 101},
-            {"F15", 102},
-            {"F16", 103},
-            {"F17", 104},
-            {"F18", 105},
-            {"F19", 106},
-            {"F20", 107},
-            {"F21", 108},
-            {"F22", 109},
-            {"F23", 110},
-            {"F24", 118},
-            {"LSHIFT", 42},
-            {"LCTRL", 29},
-            {"LALT", 56},
-            {"X", 45 }
-        };
-
-        private static readonly Dictionary<string, ushort> scanCodes = new Dictionary<string, ushort>
-        {
-            {"F13", 0x64},
-            {"F14", 0x65},
-            {"F15", 0x66},
-            {"F16", 0x67},
-            {"F17", 0x68},
-            {"F18", 0x69},
-            {"F19", 0x6A},
-            {"F20", 0x6B},
-            {"F21", 0x6C},
-            {"F22", 0x6D},
-            {"F23", 0x6E},
-            {"F24", 0x76},
-            {"LCTRL", 0x1D},
-            {"LSHIFT", 0x2A},
-            {"LALT", 0x38},
-            {"X", 0x2D}
-        };
-
         private static readonly Dictionary<string, (ushort vk, ushort scan)> keyCodes = new Dictionary<string, (ushort, ushort)>
         {
             {"F13", (0x7C, 100)},
@@ -131,9 +71,12 @@ namespace F_Key_Sender
             }
         }
 
+        [DllImport("user32.dll")]
+        static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
+
         private void SendKey_keybd_event(string key, bool ctrl, bool shift, bool alt)
         {
-            byte virtualKeyCode = virtualKeyCodes[key];
+            byte virtualKeyCode = BitConverter.GetBytes(keyCodes[key].vk)[0];
 
             // Delay before sending keys
             waitHandle.WaitOne((int)nudDelay.Value * 1000);
@@ -325,11 +268,6 @@ namespace F_Key_Sender
         private void btnF24_Click(object sender, EventArgs e)
         {
             SendKeyCombo("F24");
-        }
-
-        private void dropdownMethod_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void btnTestX_Click(object sender, EventArgs e)
