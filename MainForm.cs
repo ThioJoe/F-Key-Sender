@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -31,10 +32,11 @@ namespace F_Key_Sender
             {"F21", 0x84},
             {"F22", 0x85},
             {"F23", 0x86},
-            {"F24", 0x87}
+            {"F24", 0x87},
+            {"X", 0x58},
         };
 
-        private static readonly Dictionary<string, int> wscanCodes = new Dictionary<string, int>
+        private static readonly Dictionary<string, ushort> wscanCodes = new Dictionary<string, ushort>
         {
             {"F13", 100},
             {"F14", 101},
@@ -51,15 +53,63 @@ namespace F_Key_Sender
             {"LSHIFT", 42},
             {"LCTRL", 29},
             {"LALT", 56},
+            {"X", 45 }
+        };
+
+        private static readonly Dictionary<string, ushort> scanCodes = new Dictionary<string, ushort>
+        {
+            {"F13", 0x64},
+            {"F14", 0x65},
+            {"F15", 0x66},
+            {"F16", 0x67},
+            {"F17", 0x68},
+            {"F18", 0x69},
+            {"F19", 0x6A},
+            {"F20", 0x6B},
+            {"F21", 0x6C},
+            {"F22", 0x6D},
+            {"F23", 0x6E},
+            {"F24", 0x76},
+            {"LCTRL", 0x1D},
+            {"LSHIFT", 0x2A},
+            {"LALT", 0x38},
+            {"X", 0x2D}
+        };
+
+        private static readonly Dictionary<string, (ushort vk, ushort scan)> keyCodes = new Dictionary<string, (ushort, ushort)>
+        {
+            {"F13", (0x7C, 100)},
+            {"F14", (0x7D, 101)},
+            {"F15", (0x7E, 102)},
+            {"F16", (0x7F, 103)},
+            {"F17", (0x80, 104)},
+            {"F18", (0x81, 105)},
+            {"F19", (0x82, 106)},
+            {"F20", (0x83, 107)},
+            {"F21", (0x84, 108)},
+            {"F22", (0x85, 109)},
+            {"F23", (0x86, 110)},
+            {"F24", (0x87, 118)},
+            {"LCTRL", (0x11, 29)},
+            {"LSHIFT", (0x10, 42)},
+            {"LALT", (0x12, 56)},
+            {"X", (0x58, 45)}
         };
 
         // Flags for keybd_event
+        const uint INPUT_KEYBOARD = 1;
         const uint KEYEVENTF_KEYDOWN = 0x0000;
         const uint KEYEVENTF_KEYUP = 0x0002;
+        const uint KEYEVENTF_SCANCODE = 0x0008;
+
+        private readonly Stopwatch stopwatch = new Stopwatch();
+        private const int KEY_PRESS_DURATION = 50; // Duration in milliseconds
+
         public MainForm()
         {
             InitializeComponent();
             this.TopMost = true;
+            stopwatch.Start();
             dropdownMethod.SelectedIndex = 0;
         }
 
@@ -108,15 +158,105 @@ namespace F_Key_Sender
             if (ctrl) keybd_event(0x11, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
         }
 
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern uint SendInput(uint nInputs, INPUT[] pInputs, int cbSize);
+
+        [StructLayout(LayoutKind.Sequential)]
+        struct INPUT
+        {
+            public uint type;
+            public InputUnion u;
+        }
+
+        [StructLayout(LayoutKind.Explicit)]
+        struct InputUnion
+        {
+            [FieldOffset(0)]
+            public MOUSEINPUT mi;
+            [FieldOffset(0)]
+            public KEYBDINPUT ki;
+            [FieldOffset(0)]
+            public HARDWAREINPUT hi;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        struct KEYBDINPUT
+        {
+            public ushort wVk;
+            public ushort wScan;
+            public uint dwFlags;
+            public uint time;
+            public IntPtr dwExtraInfo;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        struct MOUSEINPUT
+        {
+            public int dx;
+            public int dy;
+            public uint mouseData;
+            public uint dwFlags;
+            public uint time;
+            public IntPtr dwExtraInfo;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        struct HARDWAREINPUT
+        {
+            public uint uMsg;
+            public ushort wParamL;
+            public ushort wParamH;
+        }
+
         private void SendKey_Method_SendInput(string key, bool ctrl, bool shift, bool alt)
         {
-            string command = "";
-            if (ctrl) command += "^";
-            if (shift) command += "+";
-            if (alt) command += "%";
-            command += $"{{{key}}}";
+            if (!keyCodes.TryGetValue(key.ToUpper(), out var codes))
+            {
+                return; // Invalid key
+            }
 
-            SendKeys.Send(command);
+            // Helper function to create and send a single input
+            void SendSingleInput(ushort vk, ushort scan, bool isKeyUp = false)
+            {
+                INPUT[] inputs = new INPUT[1];
+                inputs[0] = new INPUT
+                {
+                    type = INPUT_KEYBOARD,
+                    u = new InputUnion
+                    {
+                        ki = new KEYBDINPUT
+                        {
+                            wVk = vk,
+                            wScan = scan,
+                            dwFlags = isKeyUp ? KEYEVENTF_KEYUP : 0,
+                            time = (uint)stopwatch.ElapsedMilliseconds,
+                            dwExtraInfo = IntPtr.Zero
+                        }
+                    }
+                };
+
+                SendInput(1, inputs, Marshal.SizeOf(typeof(INPUT)));
+            }
+
+            void SendKeyWithDuration(ushort vk, ushort scan)
+            {
+                SendSingleInput(vk, scan); // Key down
+                Thread.Sleep(KEY_PRESS_DURATION);
+                SendSingleInput(vk, scan, true); // Key up
+            }
+
+            // Delay before sending keys
+            waitHandle.WaitOne((int)nudDelay.Value * 1000);
+
+            // Press modifier keys
+            if (ctrl) SendKeyWithDuration(keyCodes["LCTRL"].vk, keyCodes["LCTRL"].scan);
+            if (shift) SendKeyWithDuration(keyCodes["LSHIFT"].vk, keyCodes["LSHIFT"].scan);
+            if (alt) SendKeyWithDuration(keyCodes["LALT"].vk, keyCodes["LALT"].scan);
+
+            // Press the main key
+            SendKeyWithDuration(codes.vk, codes.scan);
+
+            // Note: We don't need to release modifier keys separately as they're already released in SendKeyWithDuration
         }
 
 
@@ -190,6 +330,11 @@ namespace F_Key_Sender
         private void dropdownMethod_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnTestX_Click(object sender, EventArgs e)
+        {
+            SendKeyCombo("X");
         }
     }
 }

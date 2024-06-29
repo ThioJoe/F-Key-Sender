@@ -48,6 +48,7 @@
             this.chkAlwaysOnTop = new F_Key_Sender.BigCheckBox();
             this.checkBoxShift = new F_Key_Sender.BigCheckBox();
             this.checkBoxCtrl = new F_Key_Sender.BigCheckBox();
+            this.btnTestX = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudDelay)).BeginInit();
             this.SuspendLayout();
             // 
@@ -210,9 +211,10 @@
             // labelMethod
             // 
             this.labelMethod.AutoSize = true;
-            this.labelMethod.Location = new System.Drawing.Point(60, 360);
+            this.labelMethod.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelMethod.Location = new System.Drawing.Point(83, 358);
             this.labelMethod.Name = "labelMethod";
-            this.labelMethod.Size = new System.Drawing.Size(92, 13);
+            this.labelMethod.Size = new System.Drawing.Size(136, 20);
             this.labelMethod.TabIndex = 17;
             this.labelMethod.Text = "Keypress Method:";
             // 
@@ -223,7 +225,7 @@
             this.dropdownMethod.Items.AddRange(new object[] {
             "SendInput",
             "Method 2"});
-            this.dropdownMethod.Location = new System.Drawing.Point(158, 357);
+            this.dropdownMethod.Location = new System.Drawing.Point(216, 357);
             this.dropdownMethod.Name = "dropdownMethod";
             this.dropdownMethod.Size = new System.Drawing.Size(148, 21);
             this.dropdownMethod.TabIndex = 18;
@@ -277,11 +279,24 @@
             this.checkBoxCtrl.Text = "Ctrl";
             this.checkBoxCtrl.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // btnTestX
+            // 
+            this.btnTestX.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnTestX.Location = new System.Drawing.Point(340, 262);
+            this.btnTestX.Name = "btnTestX";
+            this.btnTestX.Size = new System.Drawing.Size(75, 35);
+            this.btnTestX.TabIndex = 19;
+            this.btnTestX.Text = "X";
+            this.btnTestX.UseVisualStyleBackColor = true;
+            this.btnTestX.Visible = false;
+            this.btnTestX.Click += new System.EventHandler(this.btnTestX_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(427, 393);
+            this.Controls.Add(this.btnTestX);
             this.Controls.Add(this.dropdownMethod);
             this.Controls.Add(this.labelMethod);
             this.Controls.Add(this.checkBoxAlt);
@@ -332,5 +347,6 @@
         private BigCheckBox checkBoxAlt;
         private System.Windows.Forms.Label labelMethod;
         private System.Windows.Forms.ComboBox dropdownMethod;
+        private System.Windows.Forms.Button btnTestX;
     }
 }
