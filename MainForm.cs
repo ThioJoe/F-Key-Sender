@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace F_Key_Sender
@@ -18,7 +18,7 @@ namespace F_Key_Sender
         static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
 
         // Dictionary to store virtual key codes
-            private static readonly Dictionary<string, byte> virtualKeyCodes = new Dictionary<string, byte>
+        private static readonly Dictionary<string, byte> virtualKeyCodes = new Dictionary<string, byte>
         {
             {"F13", 0x7C},
             {"F14", 0x7D},
@@ -34,6 +34,25 @@ namespace F_Key_Sender
             {"F24", 0x87}
         };
 
+        private static readonly Dictionary<string, int> wscanCodes = new Dictionary<string, int>
+        {
+            {"F13", 100},
+            {"F14", 101},
+            {"F15", 102},
+            {"F16", 103},
+            {"F17", 104},
+            {"F18", 105},
+            {"F19", 106},
+            {"F20", 107},
+            {"F21", 108},
+            {"F22", 109},
+            {"F23", 110},
+            {"F24", 118},
+            {"LSHIFT", 42},
+            {"LCTRL", 29},
+            {"LALT", 56},
+        };
+
         // Flags for keybd_event
         const uint KEYEVENTF_KEYDOWN = 0x0000;
         const uint KEYEVENTF_KEYUP = 0x0002;
@@ -41,31 +60,63 @@ namespace F_Key_Sender
         {
             InitializeComponent();
             this.TopMost = true;
+            dropdownMethod.SelectedIndex = 0;
         }
 
-        private async void SendKeyCombo(string key)
+        private static readonly AutoResetEvent waitHandle = new AutoResetEvent(false);
+
+        private void SendKeyCombo(string key)
         {
-            // Get Byte value of the key
-            byte virtualKeyCode = virtualKeyCodes[key];
             bool ctrl = checkBoxCtrl.Checked;
             bool shift = checkBoxShift.Checked;
             bool alt = checkBoxAlt.Checked;
 
-            await Task.Delay((int)nudDelay.Value * 1000);
+            if (dropdownMethod.SelectedIndex == 0) // SendInput
+            {
+                SendKey_Method_SendInput(key, ctrl, shift, alt);
+            }
+            else if (dropdownMethod.SelectedIndex == 1) // keybd_event
+            {
+                SendKey_keybd_event(key, ctrl, shift, alt);
+            }
+        }
 
-            // Simulate modifier keys (Ctrl, Shift, Alt) if checked
-            if (ctrl) keybd_event(0x11, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero); // Ctrl down
-            if (shift) keybd_event(0x10, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero); // Shift down
-            if (alt) keybd_event(0x12, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero); // Alt down
+        private void SendKey_keybd_event(string key, bool ctrl, bool shift, bool alt)
+        {
+            byte virtualKeyCode = virtualKeyCodes[key];
 
-            // Simulate F-key press
+            // Delay before sending keys
+            waitHandle.WaitOne((int)nudDelay.Value * 1000);
+
+            // Press modifier keys
+            if (ctrl) keybd_event(0x11, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
+            if (shift) keybd_event(0x10, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
+            if (alt) keybd_event(0x12, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
+
+            // Press F-key
             keybd_event(virtualKeyCode, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
+
+            // Hold the key for a short duration
+            waitHandle.WaitOne(50);
+
+            // Release F-key
             keybd_event(virtualKeyCode, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
 
-            // Simulate modifier key releases
-            if (alt) keybd_event(0x12, 0, KEYEVENTF_KEYUP, UIntPtr.Zero); // Alt up
-            if (shift) keybd_event(0x10, 0, KEYEVENTF_KEYUP, UIntPtr.Zero); // Shift up
-            if (ctrl) keybd_event(0x11, 0, KEYEVENTF_KEYUP, UIntPtr.Zero); // Ctrl up
+            // Release modifier keys
+            if (alt) keybd_event(0x12, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+            if (shift) keybd_event(0x10, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+            if (ctrl) keybd_event(0x11, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+        }
+
+        private void SendKey_Method_SendInput(string key, bool ctrl, bool shift, bool alt)
+        {
+            string command = "";
+            if (ctrl) command += "^";
+            if (shift) command += "+";
+            if (alt) command += "%";
+            command += $"{{{key}}}";
+
+            SendKeys.Send(command);
         }
 
 
@@ -134,6 +185,11 @@ namespace F_Key_Sender
         private void btnF24_Click(object sender, EventArgs e)
         {
             SendKeyCombo("F24");
+        }
+
+        private void dropdownMethod_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -42,6 +42,8 @@
             this.btnF24 = new System.Windows.Forms.Button();
             this.nudDelay = new System.Windows.Forms.NumericUpDown();
             this.labelDelay = new System.Windows.Forms.Label();
+            this.labelMethod = new System.Windows.Forms.Label();
+            this.dropdownMethod = new System.Windows.Forms.ComboBox();
             this.checkBoxAlt = new F_Key_Sender.BigCheckBox();
             this.chkAlwaysOnTop = new F_Key_Sender.BigCheckBox();
             this.checkBoxShift = new F_Key_Sender.BigCheckBox();
@@ -205,6 +207,28 @@
             this.labelDelay.TabIndex = 15;
             this.labelDelay.Text = "Delay (Seconds):";
             // 
+            // labelMethod
+            // 
+            this.labelMethod.AutoSize = true;
+            this.labelMethod.Location = new System.Drawing.Point(60, 360);
+            this.labelMethod.Name = "labelMethod";
+            this.labelMethod.Size = new System.Drawing.Size(92, 13);
+            this.labelMethod.TabIndex = 17;
+            this.labelMethod.Text = "Keypress Method:";
+            // 
+            // dropdownMethod
+            // 
+            this.dropdownMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.dropdownMethod.FormattingEnabled = true;
+            this.dropdownMethod.Items.AddRange(new object[] {
+            "SendInput",
+            "Method 2"});
+            this.dropdownMethod.Location = new System.Drawing.Point(158, 357);
+            this.dropdownMethod.Name = "dropdownMethod";
+            this.dropdownMethod.Size = new System.Drawing.Size(148, 21);
+            this.dropdownMethod.TabIndex = 18;
+            this.dropdownMethod.SelectedIndexChanged += new System.EventHandler(this.dropdownMethod_SelectedIndexChanged);
+            // 
             // checkBoxAlt
             // 
             this.checkBoxAlt.CheckboxSize = 40;
@@ -257,7 +281,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(427, 364);
+            this.ClientSize = new System.Drawing.Size(427, 393);
+            this.Controls.Add(this.dropdownMethod);
+            this.Controls.Add(this.labelMethod);
             this.Controls.Add(this.checkBoxAlt);
             this.Controls.Add(this.chkAlwaysOnTop);
             this.Controls.Add(this.labelDelay);
@@ -304,5 +330,7 @@
         private System.Windows.Forms.Label labelDelay;
         private BigCheckBox chkAlwaysOnTop;
         private BigCheckBox checkBoxAlt;
+        private System.Windows.Forms.Label labelMethod;
+        private System.Windows.Forms.ComboBox dropdownMethod;
     }
 }
