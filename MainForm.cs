@@ -15,7 +15,7 @@ namespace F_Key_Sender
     public partial class MainForm : Form
     {
 
-        // Dictionary to store virtual key codes
+        // Dictionary to store virtual key codes and scan codes. Will want to use wscan codes for SendInput
         private static readonly Dictionary<string, (ushort vk, ushort scan)> keyCodes = new Dictionary<string, (ushort, ushort)>
         {
             {"F13", (0x7C, 100)},
@@ -43,7 +43,6 @@ namespace F_Key_Sender
         const uint KEYEVENTF_SCANCODE = 0x0008;
 
         private readonly Stopwatch stopwatch = new Stopwatch();
-        private const int KEY_PRESS_DURATION = 50; // Duration in milliseconds
 
         public MainForm()
         {
@@ -53,6 +52,7 @@ namespace F_Key_Sender
             dropdownMethod.SelectedIndex = 0;
         }
 
+        // Using WaitHandle instead of Thread.Sleep to avoid wasting system resources and also more accurate
         private static readonly AutoResetEvent waitHandle = new AutoResetEvent(false);
 
         private void SendKeyCombo(string key)
@@ -90,7 +90,7 @@ namespace F_Key_Sender
             keybd_event(virtualKeyCode, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
 
             // Hold the key for a short duration
-            waitHandle.WaitOne(50);
+            waitHandle.WaitOne((int)nudDuration.Value);
 
             // Release F-key
             keybd_event(virtualKeyCode, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
@@ -151,6 +151,7 @@ namespace F_Key_Sender
             public ushort wParamH;
         }
 
+        // Bypassing SendKeys and directly using SendInput due to limitations of F17 through F24 in .NET's SendKeys
         private void SendKey_Method_SendInput(string key, bool ctrl, bool shift, bool alt)
         {
             if (!keyCodes.TryGetValue(key.ToUpper(), out var codes))
@@ -202,7 +203,8 @@ namespace F_Key_Sender
             SendInput((uint)inputs.Count, inputs.ToArray(), Marshal.SizeOf(typeof(INPUT)));
 
             // Wait for the key press duration using WaitHandle
-            waitHandle.WaitOne(KEY_PRESS_DURATION);
+            //waitHandle.WaitOne(KEY_PRESS_DURATION);
+            waitHandle.WaitOne((int)nudDuration.Value);
         }
 
 

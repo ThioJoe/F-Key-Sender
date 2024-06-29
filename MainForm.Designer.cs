@@ -44,12 +44,15 @@
             this.labelDelay = new System.Windows.Forms.Label();
             this.labelMethod = new System.Windows.Forms.Label();
             this.dropdownMethod = new System.Windows.Forms.ComboBox();
+            this.btnTestX = new System.Windows.Forms.Button();
+            this.labelNudDuration = new System.Windows.Forms.Label();
+            this.nudDuration = new System.Windows.Forms.NumericUpDown();
             this.checkBoxAlt = new F_Key_Sender.BigCheckBox();
             this.chkAlwaysOnTop = new F_Key_Sender.BigCheckBox();
             this.checkBoxShift = new F_Key_Sender.BigCheckBox();
             this.checkBoxCtrl = new F_Key_Sender.BigCheckBox();
-            this.btnTestX = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudDelay)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudDuration)).BeginInit();
             this.SuspendLayout();
             // 
             // btnF13
@@ -186,35 +189,35 @@
             // 
             // nudDelay
             // 
-            this.nudDelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.nudDelay.Location = new System.Drawing.Point(181, 264);
+            this.nudDelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.nudDelay.Location = new System.Drawing.Point(158, 264);
             this.nudDelay.Maximum = new decimal(new int[] {
             10,
             0,
             0,
             0});
             this.nudDelay.Name = "nudDelay";
-            this.nudDelay.Size = new System.Drawing.Size(62, 29);
+            this.nudDelay.Size = new System.Drawing.Size(62, 26);
             this.nudDelay.TabIndex = 14;
             this.nudDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // labelDelay
             // 
             this.labelDelay.AutoSize = true;
-            this.labelDelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelDelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelDelay.Location = new System.Drawing.Point(21, 266);
             this.labelDelay.Name = "labelDelay";
-            this.labelDelay.Size = new System.Drawing.Size(154, 24);
+            this.labelDelay.Size = new System.Drawing.Size(130, 20);
             this.labelDelay.TabIndex = 15;
             this.labelDelay.Text = "Delay (Seconds):";
             // 
             // labelMethod
             // 
             this.labelMethod.AutoSize = true;
-            this.labelMethod.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelMethod.Location = new System.Drawing.Point(21, 305);
+            this.labelMethod.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelMethod.Location = new System.Drawing.Point(21, 343);
             this.labelMethod.Name = "labelMethod";
-            this.labelMethod.Size = new System.Drawing.Size(162, 24);
+            this.labelMethod.Size = new System.Drawing.Size(136, 20);
             this.labelMethod.TabIndex = 17;
             this.labelMethod.Text = "Keypress Method:";
             // 
@@ -226,58 +229,10 @@
             this.dropdownMethod.Items.AddRange(new object[] {
             "SendInput",
             "keybd_event"});
-            this.dropdownMethod.Location = new System.Drawing.Point(189, 305);
+            this.dropdownMethod.Location = new System.Drawing.Point(158, 340);
             this.dropdownMethod.Name = "dropdownMethod";
             this.dropdownMethod.Size = new System.Drawing.Size(148, 28);
             this.dropdownMethod.TabIndex = 18;
-            // 
-            // checkBoxAlt
-            // 
-            this.checkBoxAlt.CheckboxSize = 40;
-            this.checkBoxAlt.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxAlt.Location = new System.Drawing.Point(158, 193);
-            this.checkBoxAlt.Name = "checkBoxAlt";
-            this.checkBoxAlt.Size = new System.Drawing.Size(94, 56);
-            this.checkBoxAlt.TabIndex = 16;
-            this.checkBoxAlt.Text = "Alt";
-            this.checkBoxAlt.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // chkAlwaysOnTop
-            // 
-            this.chkAlwaysOnTop.CheckboxSize = 25;
-            this.chkAlwaysOnTop.Checked = true;
-            this.chkAlwaysOnTop.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkAlwaysOnTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkAlwaysOnTop.Location = new System.Drawing.Point(25, 347);
-            this.chkAlwaysOnTop.Name = "chkAlwaysOnTop";
-            this.chkAlwaysOnTop.Size = new System.Drawing.Size(193, 25);
-            this.chkAlwaysOnTop.TabIndex = 0;
-            this.chkAlwaysOnTop.Text = "Keep Window On Top";
-            this.chkAlwaysOnTop.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkAlwaysOnTop.UseVisualStyleBackColor = true;
-            this.chkAlwaysOnTop.CheckedChanged += new System.EventHandler(this.chkAlwaysOnTop_CheckedChanged);
-            // 
-            // checkBoxShift
-            // 
-            this.checkBoxShift.CheckboxSize = 40;
-            this.checkBoxShift.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxShift.Location = new System.Drawing.Point(287, 193);
-            this.checkBoxShift.Name = "checkBoxShift";
-            this.checkBoxShift.Size = new System.Drawing.Size(113, 56);
-            this.checkBoxShift.TabIndex = 13;
-            this.checkBoxShift.Text = "Shift";
-            this.checkBoxShift.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // checkBoxCtrl
-            // 
-            this.checkBoxCtrl.CheckboxSize = 40;
-            this.checkBoxCtrl.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxCtrl.Location = new System.Drawing.Point(25, 193);
-            this.checkBoxCtrl.Name = "checkBoxCtrl";
-            this.checkBoxCtrl.Size = new System.Drawing.Size(102, 56);
-            this.checkBoxCtrl.TabIndex = 12;
-            this.checkBoxCtrl.Text = "Ctrl";
-            this.checkBoxCtrl.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // btnTestX
             // 
@@ -291,11 +246,90 @@
             this.btnTestX.Visible = false;
             this.btnTestX.Click += new System.EventHandler(this.btnTestX_Click);
             // 
+            // labelNudDuration
+            // 
+            this.labelNudDuration.AutoSize = true;
+            this.labelNudDuration.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelNudDuration.Location = new System.Drawing.Point(21, 306);
+            this.labelNudDuration.Name = "labelNudDuration";
+            this.labelNudDuration.Size = new System.Drawing.Size(146, 20);
+            this.labelNudDuration.TabIndex = 21;
+            this.labelNudDuration.Text = "Hold Duration (ms):";
+            // 
+            // nudDuration
+            // 
+            this.nudDuration.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.nudDuration.Location = new System.Drawing.Point(173, 304);
+            this.nudDuration.Maximum = new decimal(new int[] {
+            9999999,
+            0,
+            0,
+            0});
+            this.nudDuration.Name = "nudDuration";
+            this.nudDuration.Size = new System.Drawing.Size(62, 26);
+            this.nudDuration.TabIndex = 20;
+            this.nudDuration.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.nudDuration.Value = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            // 
+            // checkBoxAlt
+            // 
+            this.checkBoxAlt.CheckboxSize = 40;
+            this.checkBoxAlt.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBoxAlt.Location = new System.Drawing.Point(158, 184);
+            this.checkBoxAlt.Name = "checkBoxAlt";
+            this.checkBoxAlt.Size = new System.Drawing.Size(94, 56);
+            this.checkBoxAlt.TabIndex = 16;
+            this.checkBoxAlt.Text = "Alt";
+            this.checkBoxAlt.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // chkAlwaysOnTop
+            // 
+            this.chkAlwaysOnTop.CheckboxSize = 25;
+            this.chkAlwaysOnTop.Checked = true;
+            this.chkAlwaysOnTop.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkAlwaysOnTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkAlwaysOnTop.Location = new System.Drawing.Point(25, 380);
+            this.chkAlwaysOnTop.Name = "chkAlwaysOnTop";
+            this.chkAlwaysOnTop.Size = new System.Drawing.Size(193, 25);
+            this.chkAlwaysOnTop.TabIndex = 0;
+            this.chkAlwaysOnTop.Text = "Keep Window On Top";
+            this.chkAlwaysOnTop.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkAlwaysOnTop.UseVisualStyleBackColor = true;
+            this.chkAlwaysOnTop.CheckedChanged += new System.EventHandler(this.chkAlwaysOnTop_CheckedChanged);
+            // 
+            // checkBoxShift
+            // 
+            this.checkBoxShift.CheckboxSize = 40;
+            this.checkBoxShift.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBoxShift.Location = new System.Drawing.Point(287, 184);
+            this.checkBoxShift.Name = "checkBoxShift";
+            this.checkBoxShift.Size = new System.Drawing.Size(113, 56);
+            this.checkBoxShift.TabIndex = 13;
+            this.checkBoxShift.Text = "Shift";
+            this.checkBoxShift.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // checkBoxCtrl
+            // 
+            this.checkBoxCtrl.CheckboxSize = 40;
+            this.checkBoxCtrl.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBoxCtrl.Location = new System.Drawing.Point(25, 184);
+            this.checkBoxCtrl.Name = "checkBoxCtrl";
+            this.checkBoxCtrl.Size = new System.Drawing.Size(102, 56);
+            this.checkBoxCtrl.TabIndex = 12;
+            this.checkBoxCtrl.Text = "Ctrl";
+            this.checkBoxCtrl.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(427, 393);
+            this.ClientSize = new System.Drawing.Size(427, 423);
+            this.Controls.Add(this.labelNudDuration);
+            this.Controls.Add(this.nudDuration);
             this.Controls.Add(this.btnTestX);
             this.Controls.Add(this.dropdownMethod);
             this.Controls.Add(this.labelMethod);
@@ -320,6 +354,7 @@
             this.Name = "MainForm";
             this.Text = "F Key Sender";
             ((System.ComponentModel.ISupportInitialize)(this.nudDelay)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudDuration)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -348,5 +383,7 @@
         private System.Windows.Forms.Label labelMethod;
         private System.Windows.Forms.ComboBox dropdownMethod;
         private System.Windows.Forms.Button btnTestX;
+        private System.Windows.Forms.Label labelNudDuration;
+        private System.Windows.Forms.NumericUpDown nudDuration;
     }
 }
