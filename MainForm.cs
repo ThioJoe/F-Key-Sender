@@ -158,11 +158,10 @@ namespace F_Key_Sender
                 return; // Invalid key
             }
 
-            // Helper function to create and send a single input
-            void SendSingleInput(ushort vk, ushort scan, bool isKeyUp = false)
+            // Helper function to create a single input
+            INPUT CreateInput(ushort vk, ushort scan, bool isKeyUp = false)
             {
-                INPUT[] inputs = new INPUT[1];
-                inputs[0] = new INPUT
+                return new INPUT
                 {
                     type = INPUT_KEYBOARD,
                     u = new InputUnion
@@ -177,29 +176,33 @@ namespace F_Key_Sender
                         }
                     }
                 };
-
-                SendInput(1, inputs, Marshal.SizeOf(typeof(INPUT)));
-            }
-
-            void SendKeyWithDuration(ushort vk, ushort scan)
-            {
-                SendSingleInput(vk, scan); // Key down
-                Thread.Sleep(KEY_PRESS_DURATION);
-                SendSingleInput(vk, scan, true); // Key up
             }
 
             // Delay before sending keys
             waitHandle.WaitOne((int)nudDelay.Value * 1000);
 
-            // Press modifier keys
-            if (ctrl) SendKeyWithDuration(keyCodes["LCTRL"].vk, keyCodes["LCTRL"].scan);
-            if (shift) SendKeyWithDuration(keyCodes["LSHIFT"].vk, keyCodes["LSHIFT"].scan);
-            if (alt) SendKeyWithDuration(keyCodes["LALT"].vk, keyCodes["LALT"].scan);
+            // Create a list to hold all inputs
+            List<INPUT> inputs = new List<INPUT>();
 
-            // Press the main key
-            SendKeyWithDuration(codes.vk, codes.scan);
+            // Add key down events for modifiers
+            if (ctrl) inputs.Add(CreateInput(keyCodes["LCTRL"].vk, keyCodes["LCTRL"].scan));
+            if (shift) inputs.Add(CreateInput(keyCodes["LSHIFT"].vk, keyCodes["LSHIFT"].scan));
+            if (alt) inputs.Add(CreateInput(keyCodes["LALT"].vk, keyCodes["LALT"].scan));
 
-            // Note: We don't need to release modifier keys separately as they're already released in SendKeyWithDuration
+            // Add key down event for the main key
+            inputs.Add(CreateInput(codes.vk, codes.scan));
+
+            // Add key up events in reverse order
+            inputs.Add(CreateInput(codes.vk, codes.scan, true));
+            if (alt) inputs.Add(CreateInput(keyCodes["LALT"].vk, keyCodes["LALT"].scan, true));
+            if (shift) inputs.Add(CreateInput(keyCodes["LSHIFT"].vk, keyCodes["LSHIFT"].scan, true));
+            if (ctrl) inputs.Add(CreateInput(keyCodes["LCTRL"].vk, keyCodes["LCTRL"].scan, true));
+
+            // Send all inputs at once
+            SendInput((uint)inputs.Count, inputs.ToArray(), Marshal.SizeOf(typeof(INPUT)));
+
+            // Wait for the key press duration using WaitHandle
+            waitHandle.WaitOne(KEY_PRESS_DURATION);
         }
 
 
