@@ -182,29 +182,32 @@ namespace F_Key_Sender
             // Delay before sending keys
             waitHandle.WaitOne((int)nudDelay.Value * 1000);
 
-            // Create a list to hold all inputs
-            List<INPUT> inputs = new List<INPUT>();
+            // Create lists to hold key down and key up inputs
+            List<INPUT> keyDownInputs = new List<INPUT>();
+            List<INPUT> keyUpInputs = new List<INPUT>();
 
             // Add key down events for modifiers
-            if (ctrl) inputs.Add(CreateInput(keyCodes["LCTRL"].vk, keyCodes["LCTRL"].scan));
-            if (shift) inputs.Add(CreateInput(keyCodes["LSHIFT"].vk, keyCodes["LSHIFT"].scan));
-            if (alt) inputs.Add(CreateInput(keyCodes["LALT"].vk, keyCodes["LALT"].scan));
+            if (ctrl) keyDownInputs.Add(CreateInput(keyCodes["LCTRL"].vk, keyCodes["LCTRL"].scan));
+            if (shift) keyDownInputs.Add(CreateInput(keyCodes["LSHIFT"].vk, keyCodes["LSHIFT"].scan));
+            if (alt) keyDownInputs.Add(CreateInput(keyCodes["LALT"].vk, keyCodes["LALT"].scan));
 
             // Add key down event for the main key
-            inputs.Add(CreateInput(codes.vk, codes.scan));
+            keyDownInputs.Add(CreateInput(codes.vk, codes.scan));
 
             // Add key up events in reverse order
-            inputs.Add(CreateInput(codes.vk, codes.scan, true));
-            if (alt) inputs.Add(CreateInput(keyCodes["LALT"].vk, keyCodes["LALT"].scan, true));
-            if (shift) inputs.Add(CreateInput(keyCodes["LSHIFT"].vk, keyCodes["LSHIFT"].scan, true));
-            if (ctrl) inputs.Add(CreateInput(keyCodes["LCTRL"].vk, keyCodes["LCTRL"].scan, true));
+            keyUpInputs.Add(CreateInput(codes.vk, codes.scan, true));
+            if (alt) keyUpInputs.Add(CreateInput(keyCodes["LALT"].vk, keyCodes["LALT"].scan, true));
+            if (shift) keyUpInputs.Add(CreateInput(keyCodes["LSHIFT"].vk, keyCodes["LSHIFT"].scan, true));
+            if (ctrl) keyUpInputs.Add(CreateInput(keyCodes["LCTRL"].vk, keyCodes["LCTRL"].scan, true));
 
-            // Send all inputs at once
-            SendInput((uint)inputs.Count, inputs.ToArray(), Marshal.SizeOf(typeof(INPUT)));
+            // Send key down inputs
+            SendInput((uint)keyDownInputs.Count, keyDownInputs.ToArray(), Marshal.SizeOf(typeof(INPUT)));
 
             // Wait for the key press duration using WaitHandle
-            //waitHandle.WaitOne(KEY_PRESS_DURATION);
             waitHandle.WaitOne((int)nudDuration.Value);
+
+            // Send key up inputs
+            SendInput((uint)keyUpInputs.Count, keyUpInputs.ToArray(), Marshal.SizeOf(typeof(INPUT)));
         }
 
 
