@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{62590E2D-7B1D-44FD-BDD2-5842178749C6}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>F_Key_Senders</RootNamespace>
-    <AssemblyName>F Key Senders</AssemblyName>
+    <RootNamespace>F_Key_Sender</RootNamespace>
+    <AssemblyName>F Key Sender</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -91,6 +91,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
