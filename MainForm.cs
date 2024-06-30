@@ -80,12 +80,13 @@ namespace F_Key_Sender
             catch (OperationCanceledException)
             {
                 // Handle cancellation
-                labelToolstripStatus.Text = "Status: Operation Cancelled";
-                labelToolstripStatus.ForeColor = Color.Orange;
+                labelToolstripStatus.Text = "Status: Ready (Operation Cancelled)";
+                labelToolstripStatus.ForeColor = Color.SaddleBrown;
             }
             finally
             {
                 All_Buttons_Enabler();
+                btnCancel.Visible = false;
                 _cts.Dispose();
                 _cts = null;
             }
@@ -106,6 +107,7 @@ namespace F_Key_Sender
                     All_Buttons_Disabler();
                     labelToolstripStatus.Text = "Status: Waiting Before Sending...";
                     labelToolstripStatus.ForeColor = Color.Purple;
+                    btnCancel.Visible = true;
                 });
 
                 await Task.Delay((int)nudDelay.Value * 1000, ct);
@@ -124,7 +126,7 @@ namespace F_Key_Sender
                 this.Invoke((MethodInvoker)delegate
                 {
                     labelToolstripStatus.Text = "Status: Holding Key...";
-                    labelToolstripStatus.ForeColor = Color.Red;
+                    labelToolstripStatus.ForeColor = Color.Green;
                 });
 
                 await Task.Delay((int)nudDuration.Value, ct);
@@ -145,6 +147,7 @@ namespace F_Key_Sender
                     All_Buttons_Enabler();
                     labelToolstripStatus.Text = "Status: Ready";
                     labelToolstripStatus.ForeColor = Color.Black;
+                    btnCancel.Visible = false;
                 });
             }, ct);
         }
@@ -235,6 +238,7 @@ namespace F_Key_Sender
                     All_Buttons_Disabler();
                     labelToolstripStatus.Text = "Status: Waiting Before Sending...";
                     labelToolstripStatus.ForeColor = Color.Purple;
+                    btnCancel.Visible = true;
                 });
 
                 await Task.Delay((int)nudDelay.Value * 1000, ct);
@@ -266,7 +270,7 @@ namespace F_Key_Sender
                 this.Invoke((MethodInvoker)delegate
                 {
                     labelToolstripStatus.Text = "Status: Holding Key...";
-                    labelToolstripStatus.ForeColor = Color.Red;
+                    labelToolstripStatus.ForeColor = Color.Green;
                 });
 
                 await Task.Delay((int)nudDuration.Value, ct);
@@ -282,6 +286,7 @@ namespace F_Key_Sender
                     All_Buttons_Enabler();
                     labelToolstripStatus.Text = "Status: Ready";
                     labelToolstripStatus.ForeColor = Color.Black;
+                    btnCancel.Visible = false;
                 });
             }, ct);
         }
@@ -409,6 +414,17 @@ namespace F_Key_Sender
         private void btnTestX_Click(object sender, EventArgs e)
         {
             SendKeyCombo("X");
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            if (_cts != null && !_cts.IsCancellationRequested)
+            {
+                _cts.Cancel();
+                labelToolstripStatus.Text = "Status: Cancelling...";
+                labelToolstripStatus.ForeColor = Color.Orange;
+                btnCancel.Enabled = false;
+            }
         }
     }
 

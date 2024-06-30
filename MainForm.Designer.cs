@@ -50,6 +50,7 @@
             this.nudDuration = new System.Windows.Forms.NumericUpDown();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.labelToolstripStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.btnCancel = new System.Windows.Forms.Button();
             this.checkBoxAlt = new F_Key_Sender.BigCheckBox();
             this.chkAlwaysOnTop = new F_Key_Sender.BigCheckBox();
             this.checkBoxShift = new F_Key_Sender.BigCheckBox();
@@ -300,6 +301,19 @@
             this.labelToolstripStatus.Size = new System.Drawing.Size(77, 17);
             this.labelToolstripStatus.Text = "Status: Ready";
             // 
+            // btnCancel
+            // 
+            this.btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCancel.ForeColor = System.Drawing.Color.Red;
+            this.btnCancel.Location = new System.Drawing.Point(325, 390);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(90, 30);
+            this.btnCancel.TabIndex = 23;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Visible = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
             // checkBoxAlt
             // 
             this.checkBoxAlt.CheckboxSize = 40;
@@ -353,6 +367,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(427, 454);
+            this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.labelNudDuration);
             this.Controls.Add(this.nudDuration);
@@ -417,5 +432,6 @@
         private System.Windows.Forms.NumericUpDown nudDuration;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel labelToolstripStatus;
+        private System.Windows.Forms.Button btnCancel;
     }
 }
