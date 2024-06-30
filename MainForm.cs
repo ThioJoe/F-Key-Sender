@@ -78,8 +78,10 @@ namespace F_Key_Sender
         {
             byte virtualKeyCode = BitConverter.GetBytes(keyCodes[key].vk)[0];
 
-            // Delay before sending keys. Disable buttons while keys are virtually held down
+            // Start delay, disable buttons, and update status text
             All_Buttons_Disabler();
+            labelToolstripStatus.Text = "Status: Waiting Before Sending...";
+            labelToolstripStatus.ForeColor = Color.Purple;
             waitHandle.WaitOne((int)nudDelay.Value * 1000);
 
             // Press modifier keys
@@ -90,7 +92,9 @@ namespace F_Key_Sender
             // Press F-key
             keybd_event(virtualKeyCode, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
 
-            // Hold the key for a short duration
+            // Hold the key for specified duration, update status text
+            labelToolstripStatus.Text = "Status: Holding Key...";
+            labelToolstripStatus.ForeColor = Color.Red;
             waitHandle.WaitOne((int)nudDuration.Value);
 
             // Release F-key
@@ -103,6 +107,8 @@ namespace F_Key_Sender
 
             // Re-enable all buttons after keys are released
             All_Buttons_Enabler();
+            labelToolstripStatus.Text = "Status: Ready";
+            labelToolstripStatus.ForeColor = Color.Black;
         }
 
         [DllImport("user32.dll", SetLastError = true)]
@@ -185,6 +191,8 @@ namespace F_Key_Sender
 
             // Delay before sending keys. Disable all buttons while keys are virtually held down
             All_Buttons_Disabler();
+            labelToolstripStatus.Text = "Status: Waiting Before Sending...";
+            labelToolstripStatus.ForeColor = Color.Purple;
             waitHandle.WaitOne((int)nudDelay.Value * 1000);
 
             // Create lists to hold key down and key up inputs
@@ -209,6 +217,8 @@ namespace F_Key_Sender
             SendInput((uint)keyDownInputs.Count, keyDownInputs.ToArray(), Marshal.SizeOf(typeof(INPUT)));
 
             // Wait for the key press duration using WaitHandle
+            labelToolstripStatus.Text = "Status: Holding Key...";
+            labelToolstripStatus.ForeColor = Color.Red;
             waitHandle.WaitOne((int)nudDuration.Value);
 
             // Send key up inputs
@@ -216,6 +226,8 @@ namespace F_Key_Sender
 
             // Re-enable all buttons after keys are released
             All_Buttons_Enabler();
+            labelToolstripStatus.Text = "Status: Ready";
+            labelToolstripStatus.ForeColor = Color.Black;
         }
 
         private void All_Buttons_Disabler()
@@ -336,8 +348,6 @@ namespace F_Key_Sender
         {
             SendKeyCombo("X");
         }
-
-
     }
 
 

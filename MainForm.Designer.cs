@@ -48,12 +48,15 @@
             this.btnTestX = new System.Windows.Forms.Button();
             this.labelNudDuration = new System.Windows.Forms.Label();
             this.nudDuration = new System.Windows.Forms.NumericUpDown();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.labelToolstripStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.checkBoxAlt = new F_Key_Sender.BigCheckBox();
             this.chkAlwaysOnTop = new F_Key_Sender.BigCheckBox();
             this.checkBoxShift = new F_Key_Sender.BigCheckBox();
             this.checkBoxCtrl = new F_Key_Sender.BigCheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.nudDelay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudDuration)).BeginInit();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnF13
@@ -201,6 +204,11 @@
             this.nudDelay.Size = new System.Drawing.Size(62, 26);
             this.nudDelay.TabIndex = 14;
             this.nudDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.nudDelay.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
             // 
             // labelDelay
             // 
@@ -276,6 +284,22 @@
             0,
             0});
             // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.labelToolstripStatus});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 432);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(427, 22);
+            this.statusStrip1.TabIndex = 22;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // labelToolstripStatus
+            // 
+            this.labelToolstripStatus.Name = "labelToolstripStatus";
+            this.labelToolstripStatus.Size = new System.Drawing.Size(77, 17);
+            this.labelToolstripStatus.Text = "Status: Ready";
+            // 
             // checkBoxAlt
             // 
             this.checkBoxAlt.CheckboxSize = 40;
@@ -328,7 +352,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(427, 423);
+            this.ClientSize = new System.Drawing.Size(427, 454);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.labelNudDuration);
             this.Controls.Add(this.nudDuration);
             this.Controls.Add(this.btnTestX);
@@ -352,11 +377,14 @@
             this.Controls.Add(this.btnF22);
             this.Controls.Add(this.btnF23);
             this.Controls.Add(this.btnF24);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
-            this.Text = "F Key Sender";
+            this.Text = "F-Key Sender";
             ((System.ComponentModel.ISupportInitialize)(this.nudDelay)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudDuration)).EndInit();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -387,5 +415,7 @@
         private System.Windows.Forms.Button btnTestX;
         private System.Windows.Forms.Label labelNudDuration;
         private System.Windows.Forms.NumericUpDown nudDuration;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel labelToolstripStatus;
     }
 }
