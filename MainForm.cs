@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace F_Key_Sender
@@ -55,60 +56,97 @@ namespace F_Key_Sender
         // Using WaitHandle instead of Thread.Sleep to avoid wasting system resources and also more accurate
         private static readonly AutoResetEvent waitHandle = new AutoResetEvent(false);
 
-        private void SendKeyCombo(string key)
+        private CancellationTokenSource _cts;
+
+        private async void SendKeyCombo(string key)
         {
             bool ctrl = checkBoxCtrl.Checked;
             bool shift = checkBoxShift.Checked;
             bool alt = checkBoxAlt.Checked;
 
-            if (dropdownMethod.SelectedIndex == 0) // SendInput
+            _cts = new CancellationTokenSource();
+
+            try
             {
-                SendKey_Method_SendInput(key, ctrl, shift, alt);
+                if (dropdownMethod.SelectedIndex == 0) // SendInput
+                {
+                    await SendKey_Method_SendInputAsync(key, ctrl, shift, alt, _cts.Token);
+                }
+                else if (dropdownMethod.SelectedIndex == 1) // keybd_event
+                {
+                    await SendKey_keybd_eventAsync(key, ctrl, shift, alt, _cts.Token);
+                }
             }
-            else if (dropdownMethod.SelectedIndex == 1) // keybd_event
+            catch (OperationCanceledException)
             {
-                SendKey_keybd_event(key, ctrl, shift, alt);
+                // Handle cancellation
+                labelToolstripStatus.Text = "Status: Operation Cancelled";
+                labelToolstripStatus.ForeColor = Color.Orange;
+            }
+            finally
+            {
+                All_Buttons_Enabler();
+                _cts.Dispose();
+                _cts = null;
             }
         }
 
         [DllImport("user32.dll")]
         static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
 
-        private void SendKey_keybd_event(string key, bool ctrl, bool shift, bool alt)
+        private async Task SendKey_keybd_eventAsync(string key, bool ctrl, bool shift, bool alt, CancellationToken ct)
         {
             byte virtualKeyCode = BitConverter.GetBytes(keyCodes[key].vk)[0];
 
-            // Start delay, disable buttons, and update status text
-            All_Buttons_Disabler();
-            labelToolstripStatus.Text = "Status: Waiting Before Sending...";
-            labelToolstripStatus.ForeColor = Color.Purple;
-            waitHandle.WaitOne((int)nudDelay.Value * 1000);
+            await Task.Run(async () =>
+            {
+                // Start delay, disable buttons, and update status text
+                this.Invoke((MethodInvoker)delegate
+                {
+                    All_Buttons_Disabler();
+                    labelToolstripStatus.Text = "Status: Waiting Before Sending...";
+                    labelToolstripStatus.ForeColor = Color.Purple;
+                });
 
-            // Press modifier keys
-            if (ctrl) keybd_event(0x11, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
-            if (shift) keybd_event(0x10, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
-            if (alt) keybd_event(0x12, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
+                await Task.Delay((int)nudDelay.Value * 1000, ct);
 
-            // Press F-key
-            keybd_event(virtualKeyCode, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
+                ct.ThrowIfCancellationRequested();
 
-            // Hold the key for specified duration, update status text
-            labelToolstripStatus.Text = "Status: Holding Key...";
-            labelToolstripStatus.ForeColor = Color.Red;
-            waitHandle.WaitOne((int)nudDuration.Value);
+                // Press modifier keys
+                if (ctrl) keybd_event(0x11, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
+                if (shift) keybd_event(0x10, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
+                if (alt) keybd_event(0x12, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
 
-            // Release F-key
-            keybd_event(virtualKeyCode, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+                // Press F-key
+                keybd_event(virtualKeyCode, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
 
-            // Release modifier keys
-            if (alt) keybd_event(0x12, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
-            if (shift) keybd_event(0x10, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
-            if (ctrl) keybd_event(0x11, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+                // Hold the key for specified duration, update status text
+                this.Invoke((MethodInvoker)delegate
+                {
+                    labelToolstripStatus.Text = "Status: Holding Key...";
+                    labelToolstripStatus.ForeColor = Color.Red;
+                });
 
-            // Re-enable all buttons after keys are released
-            All_Buttons_Enabler();
-            labelToolstripStatus.Text = "Status: Ready";
-            labelToolstripStatus.ForeColor = Color.Black;
+                await Task.Delay((int)nudDuration.Value, ct);
+
+                ct.ThrowIfCancellationRequested();
+
+                // Release F-key
+                keybd_event(virtualKeyCode, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+
+                // Release modifier keys
+                if (alt) keybd_event(0x12, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+                if (shift) keybd_event(0x10, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+                if (ctrl) keybd_event(0x11, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+
+                // Re-enable all buttons after keys are released
+                this.Invoke((MethodInvoker)delegate
+                {
+                    All_Buttons_Enabler();
+                    labelToolstripStatus.Text = "Status: Ready";
+                    labelToolstripStatus.ForeColor = Color.Black;
+                });
+            }, ct);
         }
 
         [DllImport("user32.dll", SetLastError = true)]
@@ -162,72 +200,96 @@ namespace F_Key_Sender
         }
 
         // Bypassing SendKeys and directly using SendInput due to limitations of F17 through F24 in .NET's SendKeys
-        private void SendKey_Method_SendInput(string key, bool ctrl, bool shift, bool alt)
+        private async Task SendKey_Method_SendInputAsync(string key, bool ctrl, bool shift, bool alt, CancellationToken ct)
         {
             if (!keyCodes.TryGetValue(key.ToUpper(), out var codes))
             {
                 return; // Invalid key
             }
 
-            // Helper function to create a single input
-            INPUT CreateInput(ushort vk, ushort scan, bool isKeyUp = false)
+            await Task.Run(async () =>
             {
-                return new INPUT
+                // Helper function to create a single input
+                INPUT CreateInput(ushort vk, ushort scan, bool isKeyUp = false)
                 {
-                    type = INPUT_KEYBOARD,
-                    u = new InputUnion
+                    return new INPUT
                     {
-                        ki = new KEYBDINPUT
+                        type = INPUT_KEYBOARD,
+                        u = new InputUnion
                         {
-                            wVk = vk,
-                            wScan = scan,
-                            dwFlags = isKeyUp ? KEYEVENTF_KEYUP : 0,
-                            time = (uint)stopwatch.ElapsedMilliseconds,
-                            dwExtraInfo = IntPtr.Zero
+                            ki = new KEYBDINPUT
+                            {
+                                wVk = vk,
+                                wScan = scan,
+                                dwFlags = isKeyUp ? KEYEVENTF_KEYUP : 0,
+                                time = (uint)stopwatch.ElapsedMilliseconds,
+                                dwExtraInfo = IntPtr.Zero
+                            }
                         }
-                    }
-                };
-            }
+                    };
+                }
 
-            // Delay before sending keys. Disable all buttons while keys are virtually held down
-            All_Buttons_Disabler();
-            labelToolstripStatus.Text = "Status: Waiting Before Sending...";
-            labelToolstripStatus.ForeColor = Color.Purple;
-            waitHandle.WaitOne((int)nudDelay.Value * 1000);
+                // Delay before sending keys. Disable all buttons while keys are virtually held down
+                this.Invoke((MethodInvoker)delegate
+                {
+                    All_Buttons_Disabler();
+                    labelToolstripStatus.Text = "Status: Waiting Before Sending...";
+                    labelToolstripStatus.ForeColor = Color.Purple;
+                });
 
-            // Create lists to hold key down and key up inputs
-            List<INPUT> keyDownInputs = new List<INPUT>();
-            List<INPUT> keyUpInputs = new List<INPUT>();
+                await Task.Delay((int)nudDelay.Value * 1000, ct);
 
-            // Add key down events for modifiers
-            if (ctrl) keyDownInputs.Add(CreateInput(keyCodes["LCTRL"].vk, keyCodes["LCTRL"].scan));
-            if (shift) keyDownInputs.Add(CreateInput(keyCodes["LSHIFT"].vk, keyCodes["LSHIFT"].scan));
-            if (alt) keyDownInputs.Add(CreateInput(keyCodes["LALT"].vk, keyCodes["LALT"].scan));
+                ct.ThrowIfCancellationRequested();
 
-            // Add key down event for the main key
-            keyDownInputs.Add(CreateInput(codes.vk, codes.scan));
+                // Create lists to hold key down and key up inputs
+                List<INPUT> keyDownInputs = new List<INPUT>();
+                List<INPUT> keyUpInputs = new List<INPUT>();
 
-            // Add key up events in reverse order
-            keyUpInputs.Add(CreateInput(codes.vk, codes.scan, true));
-            if (alt) keyUpInputs.Add(CreateInput(keyCodes["LALT"].vk, keyCodes["LALT"].scan, true));
-            if (shift) keyUpInputs.Add(CreateInput(keyCodes["LSHIFT"].vk, keyCodes["LSHIFT"].scan, true));
-            if (ctrl) keyUpInputs.Add(CreateInput(keyCodes["LCTRL"].vk, keyCodes["LCTRL"].scan, true));
+                // Add key down events for modifiers
+                if (ctrl) keyDownInputs.Add(CreateInput(keyCodes["LCTRL"].vk, keyCodes["LCTRL"].scan));
+                if (shift) keyDownInputs.Add(CreateInput(keyCodes["LSHIFT"].vk, keyCodes["LSHIFT"].scan));
+                if (alt) keyDownInputs.Add(CreateInput(keyCodes["LALT"].vk, keyCodes["LALT"].scan));
 
-            // Send key down inputs
-            SendInput((uint)keyDownInputs.Count, keyDownInputs.ToArray(), Marshal.SizeOf(typeof(INPUT)));
+                // Add key down event for the main key
+                keyDownInputs.Add(CreateInput(codes.vk, codes.scan));
 
-            // Wait for the key press duration using WaitHandle
-            labelToolstripStatus.Text = "Status: Holding Key...";
-            labelToolstripStatus.ForeColor = Color.Red;
-            waitHandle.WaitOne((int)nudDuration.Value);
+                // Add key up events in reverse order
+                keyUpInputs.Add(CreateInput(codes.vk, codes.scan, true));
+                if (alt) keyUpInputs.Add(CreateInput(keyCodes["LALT"].vk, keyCodes["LALT"].scan, true));
+                if (shift) keyUpInputs.Add(CreateInput(keyCodes["LSHIFT"].vk, keyCodes["LSHIFT"].scan, true));
+                if (ctrl) keyUpInputs.Add(CreateInput(keyCodes["LCTRL"].vk, keyCodes["LCTRL"].scan, true));
 
-            // Send key up inputs
-            SendInput((uint)keyUpInputs.Count, keyUpInputs.ToArray(), Marshal.SizeOf(typeof(INPUT)));
+                // Send key down inputs
+                SendInput((uint)keyDownInputs.Count, keyDownInputs.ToArray(), Marshal.SizeOf(typeof(INPUT)));
 
-            // Re-enable all buttons after keys are released
-            All_Buttons_Enabler();
-            labelToolstripStatus.Text = "Status: Ready";
-            labelToolstripStatus.ForeColor = Color.Black;
+                // Wait for the key press duration using Task.Delay
+                this.Invoke((MethodInvoker)delegate
+                {
+                    labelToolstripStatus.Text = "Status: Holding Key...";
+                    labelToolstripStatus.ForeColor = Color.Red;
+                });
+
+                await Task.Delay((int)nudDuration.Value, ct);
+
+                ct.ThrowIfCancellationRequested();
+
+                // Send key up inputs
+                SendInput((uint)keyUpInputs.Count, keyUpInputs.ToArray(), Marshal.SizeOf(typeof(INPUT)));
+
+                // Re-enable all buttons after keys are released
+                this.Invoke((MethodInvoker)delegate
+                {
+                    All_Buttons_Enabler();
+                    labelToolstripStatus.Text = "Status: Ready";
+                    labelToolstripStatus.ForeColor = Color.Black;
+                });
+            }, ct);
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            _cts?.Cancel();
+            base.OnFormClosing(e);
         }
 
         private void All_Buttons_Disabler()
