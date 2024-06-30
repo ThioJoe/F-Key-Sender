@@ -318,6 +318,13 @@ namespace F_Key_Sender
             checkBoxAlt.Enabled = false;
             checkBoxCtrl.Enabled = false;
             checkBoxShift.Enabled = false;
+
+            // Disable numeric updowns
+            nudDelay.Enabled = false;
+            nudDuration.Enabled = false;
+
+            // Disable dropdown
+            dropdownMethod.Enabled = false;
         }
 
         private void All_Buttons_Enabler()
@@ -341,6 +348,13 @@ namespace F_Key_Sender
             checkBoxAlt.Enabled = true;
             checkBoxCtrl.Enabled = true;
             checkBoxShift.Enabled = true;
+
+            // Enable numeric updowns
+            nudDelay.Enabled = true;
+            nudDuration.Enabled = true;
+
+            // Enable dropdown
+            dropdownMethod.Enabled = true;
         }
 
 
