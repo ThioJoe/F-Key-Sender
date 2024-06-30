@@ -10,4 +10,6 @@
 - Release Exe signed with EV code signing certificate (No pop up from Windows about untrusted software)
 
 ## Screenshot:
-![Window Screenshot](https://github.com/ThioJoe/F-Key-Sender/assets/12518330/07053027-a58f-4454-b017-d803925fca43)
+<img src="https://github.com/ThioJoe/F-Key-Sender/assets/12518330/167e6a9c-fdec-4e95-93ff-7bfa3555ad9f" width=50% height=50%>
+
+
