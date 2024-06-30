@@ -78,7 +78,8 @@ namespace F_Key_Sender
         {
             byte virtualKeyCode = BitConverter.GetBytes(keyCodes[key].vk)[0];
 
-            // Delay before sending keys
+            // Delay before sending keys. Disable buttons while keys are virtually held down
+            All_Buttons_Disabler();
             waitHandle.WaitOne((int)nudDelay.Value * 1000);
 
             // Press modifier keys
@@ -99,6 +100,9 @@ namespace F_Key_Sender
             if (alt) keybd_event(0x12, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
             if (shift) keybd_event(0x10, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
             if (ctrl) keybd_event(0x11, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+
+            // Re-enable all buttons after keys are released
+            All_Buttons_Enabler();
         }
 
         [DllImport("user32.dll", SetLastError = true)]
@@ -179,7 +183,8 @@ namespace F_Key_Sender
                 };
             }
 
-            // Delay before sending keys
+            // Delay before sending keys. Disable all buttons while keys are virtually held down
+            All_Buttons_Disabler();
             waitHandle.WaitOne((int)nudDelay.Value * 1000);
 
             // Create lists to hold key down and key up inputs
@@ -208,6 +213,55 @@ namespace F_Key_Sender
 
             // Send key up inputs
             SendInput((uint)keyUpInputs.Count, keyUpInputs.ToArray(), Marshal.SizeOf(typeof(INPUT)));
+
+            // Re-enable all buttons after keys are released
+            All_Buttons_Enabler();
+        }
+
+        private void All_Buttons_Disabler()
+        {
+            // Disable all buttons
+            btnF13.Enabled = false;
+            btnF14.Enabled = false;
+            btnF15.Enabled = false;
+            btnF16.Enabled = false;
+            btnF17.Enabled = false;
+            btnF18.Enabled = false;
+            btnF19.Enabled = false;
+            btnF20.Enabled = false;
+            btnF21.Enabled = false;
+            btnF22.Enabled = false;
+            btnF23.Enabled = false;
+            btnF24.Enabled = false;
+            btnTestX.Enabled = false;
+
+            // Disable checkboxes
+            checkBoxAlt.Enabled = false;
+            checkBoxCtrl.Enabled = false;
+            checkBoxShift.Enabled = false;
+        }
+
+        private void All_Buttons_Enabler()
+        {
+            // Enable all buttons
+            btnF13.Enabled = true;
+            btnF14.Enabled = true;
+            btnF15.Enabled = true;
+            btnF16.Enabled = true;
+            btnF17.Enabled = true;
+            btnF18.Enabled = true;
+            btnF19.Enabled = true;
+            btnF20.Enabled = true;
+            btnF21.Enabled = true;
+            btnF22.Enabled = true;
+            btnF23.Enabled = true;
+            btnF24.Enabled = true;
+            btnTestX.Enabled = true;
+
+            // Enable checkboxes
+            checkBoxAlt.Enabled = true;
+            checkBoxCtrl.Enabled = true;
+            checkBoxShift.Enabled = true;
         }
 
 
@@ -282,5 +336,9 @@ namespace F_Key_Sender
         {
             SendKeyCombo("X");
         }
+
+
     }
+
+
 }
