@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.btnF13 = new System.Windows.Forms.Button();
             this.btnF14 = new System.Windows.Forms.Button();
             this.btnF15 = new System.Windows.Forms.Button();
@@ -351,6 +352,7 @@
             this.Controls.Add(this.btnF22);
             this.Controls.Add(this.btnF23);
             this.Controls.Add(this.btnF24);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.Text = "F Key Sender";
             ((System.ComponentModel.ISupportInitialize)(this.nudDelay)).EndInit();
