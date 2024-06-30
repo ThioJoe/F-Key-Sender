@@ -331,7 +331,7 @@
             this.chkAlwaysOnTop.Checked = true;
             this.chkAlwaysOnTop.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkAlwaysOnTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkAlwaysOnTop.Location = new System.Drawing.Point(25, 380);
+            this.chkAlwaysOnTop.Location = new System.Drawing.Point(25, 390);
             this.chkAlwaysOnTop.Name = "chkAlwaysOnTop";
             this.chkAlwaysOnTop.Size = new System.Drawing.Size(193, 25);
             this.chkAlwaysOnTop.TabIndex = 0;
