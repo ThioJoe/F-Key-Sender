@@ -21,6 +21,12 @@ Purpose of this tool:
 
 By providing a simple interface to send these virtual keystrokes, this tool opens up new possibilities for customization and efficiency in your daily computer use, whether for work, gaming, or any other purpose where extra programmable keys could be beneficial.
 
+## How to Download
+
+- Go to the [Releases](https://github.com/ThioJoe/F-Key-Sender/releases) page (link also found on the right side of the page)
+- For the latest release, look under 'Assets' and click to download `F_Key_Sender.exe`
+
+
 ## Screenshot:
 <img src="https://github.com/ThioJoe/F-Key-Sender/assets/12518330/167e6a9c-fdec-4e95-93ff-7bfa3555ad9f" width=50% height=50%>
 
