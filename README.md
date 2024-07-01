@@ -9,6 +9,9 @@
   - `keybd_event`: Older method for generating keyboard input in case SendInput doesn't work.
 - Release Exe signed with EV code signing certificate (No pop up from Windows about untrusted software)
 
+## Screenshot:
+<img src="https://github.com/ThioJoe/F-Key-Sender/assets/12518330/167e6a9c-fdec-4e95-93ff-7bfa3555ad9f" width=50% height=50%>
+
 ## Why?
 
 Most modern keyboards only include function keys up to F12, but did you know that Windows supports function keys all the way up to F24? These additional function keys (F13-F24) can be incredibly useful, especially for power users, programmers, and gamers who want to maximize their productivity and customize their workflow.
@@ -27,7 +30,6 @@ By providing a simple interface to send these virtual keystrokes, this tool open
 - For the latest release, look under 'Assets' and click to download `F_Key_Sender.exe`
 
 
-## Screenshot:
-<img src="https://github.com/ThioJoe/F-Key-Sender/assets/12518330/167e6a9c-fdec-4e95-93ff-7bfa3555ad9f" width=50% height=50%>
+
 
 
