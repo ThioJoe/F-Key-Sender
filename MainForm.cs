@@ -64,6 +64,9 @@ namespace F_Key_Sender
             bool shift = checkBoxShift.Checked;
             bool alt = checkBoxAlt.Checked;
 
+            // Enable cancel button even though not visible yet
+            btnCancel.Enabled = true;
+
             _cts = new CancellationTokenSource();
 
             try
