@@ -73,7 +73,7 @@
             this.btnF13.TabIndex = 0;
             this.btnF13.Text = "F13";
             this.btnF13.UseVisualStyleBackColor = true;
-            this.btnF13.Click += new System.EventHandler(this.btnF13_Click);
+            this.btnF13.Click += new System.EventHandler(this.btnS_Click);
             // 
             // btnF14
             // 
@@ -84,7 +84,7 @@
             this.btnF14.TabIndex = 1;
             this.btnF14.Text = "F14";
             this.btnF14.UseVisualStyleBackColor = true;
-            this.btnF14.Click += new System.EventHandler(this.btnF14_Click);
+            this.btnF14.Click += new System.EventHandler(this.btnS_Click);
             // 
             // btnF15
             // 
@@ -95,7 +95,7 @@
             this.btnF15.TabIndex = 2;
             this.btnF15.Text = "F15";
             this.btnF15.UseVisualStyleBackColor = true;
-            this.btnF15.Click += new System.EventHandler(this.btnF15_Click);
+            this.btnF15.Click += new System.EventHandler(this.btnS_Click);
             // 
             // btnF16
             // 
@@ -106,7 +106,7 @@
             this.btnF16.TabIndex = 3;
             this.btnF16.Text = "F16";
             this.btnF16.UseVisualStyleBackColor = true;
-            this.btnF16.Click += new System.EventHandler(this.btnF16_Click);
+            this.btnF16.Click += new System.EventHandler(this.btnS_Click);
             // 
             // btnF17
             // 
@@ -117,7 +117,7 @@
             this.btnF17.TabIndex = 4;
             this.btnF17.Text = "F17";
             this.btnF17.UseVisualStyleBackColor = true;
-            this.btnF17.Click += new System.EventHandler(this.btnF17_Click);
+            this.btnF17.Click += new System.EventHandler(this.btnS_Click);
             // 
             // btnF18
             // 
@@ -128,7 +128,7 @@
             this.btnF18.TabIndex = 5;
             this.btnF18.Text = "F18";
             this.btnF18.UseVisualStyleBackColor = true;
-            this.btnF18.Click += new System.EventHandler(this.btnF18_Click);
+            this.btnF18.Click += new System.EventHandler(this.btnS_Click);
             // 
             // btnF19
             // 
@@ -139,7 +139,7 @@
             this.btnF19.TabIndex = 6;
             this.btnF19.Text = "F19";
             this.btnF19.UseVisualStyleBackColor = true;
-            this.btnF19.Click += new System.EventHandler(this.btnF19_Click);
+            this.btnF19.Click += new System.EventHandler(this.btnS_Click);
             // 
             // btnF20
             // 
@@ -150,7 +150,7 @@
             this.btnF20.TabIndex = 7;
             this.btnF20.Text = "F20";
             this.btnF20.UseVisualStyleBackColor = true;
-            this.btnF20.Click += new System.EventHandler(this.btnF20_Click);
+            this.btnF20.Click += new System.EventHandler(this.btnS_Click);
             // 
             // btnF21
             // 
@@ -161,7 +161,7 @@
             this.btnF21.TabIndex = 8;
             this.btnF21.Text = "F21";
             this.btnF21.UseVisualStyleBackColor = true;
-            this.btnF21.Click += new System.EventHandler(this.btnF21_Click);
+            this.btnF21.Click += new System.EventHandler(this.btnS_Click);
             // 
             // btnF22
             // 
@@ -172,7 +172,7 @@
             this.btnF22.TabIndex = 9;
             this.btnF22.Text = "F22";
             this.btnF22.UseVisualStyleBackColor = true;
-            this.btnF22.Click += new System.EventHandler(this.btnF22_Click);
+            this.btnF22.Click += new System.EventHandler(this.btnS_Click);
             // 
             // btnF23
             // 
@@ -183,7 +183,7 @@
             this.btnF23.TabIndex = 10;
             this.btnF23.Text = "F23";
             this.btnF23.UseVisualStyleBackColor = true;
-            this.btnF23.Click += new System.EventHandler(this.btnF23_Click);
+            this.btnF23.Click += new System.EventHandler(this.btnS_Click);
             // 
             // btnF24
             // 
@@ -194,7 +194,7 @@
             this.btnF24.TabIndex = 11;
             this.btnF24.Text = "F24";
             this.btnF24.UseVisualStyleBackColor = true;
-            this.btnF24.Click += new System.EventHandler(this.btnF24_Click);
+            this.btnF24.Click += new System.EventHandler(this.btnS_Click);
             // 
             // nudDelay
             // 
