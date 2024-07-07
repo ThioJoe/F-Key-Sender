@@ -1,12 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -88,7 +84,7 @@ namespace F_Key_Sender
             }
             finally
             {
-                All_Buttons_Enabler();
+                ControlsAvailable(true);
                 btnCancel.Visible = false;
                 _cts.Dispose();
                 _cts = null;
@@ -107,7 +103,7 @@ namespace F_Key_Sender
                 // Start delay, disable buttons, and update status text
                 this.Invoke((MethodInvoker)delegate
                 {
-                    All_Buttons_Disabler();
+                    ControlsAvailable(false);
                     labelToolstripStatus.Text = "Status: Waiting Before Sending...";
                     labelToolstripStatus.ForeColor = Color.Purple;
                     btnCancel.Visible = true;
@@ -147,7 +143,7 @@ namespace F_Key_Sender
                 // Re-enable all buttons after keys are released
                 this.Invoke((MethodInvoker)delegate
                 {
-                    All_Buttons_Enabler();
+                    ControlsAvailable(true);
                     labelToolstripStatus.Text = "Status: Ready";
                     labelToolstripStatus.ForeColor = Color.Black;
                     btnCancel.Visible = false;
@@ -238,7 +234,7 @@ namespace F_Key_Sender
                 // Delay before sending keys. Disable all buttons while keys are virtually held down
                 this.Invoke((MethodInvoker)delegate
                 {
-                    All_Buttons_Disabler();
+                    ControlsAvailable(false);
                     labelToolstripStatus.Text = "Status: Waiting Before Sending...";
                     labelToolstripStatus.ForeColor = Color.Purple;
                     btnCancel.Visible = true;
@@ -286,7 +282,7 @@ namespace F_Key_Sender
                 // Re-enable all buttons after keys are released
                 this.Invoke((MethodInvoker)delegate
                 {
-                    All_Buttons_Enabler();
+                    ControlsAvailable(true);
                     labelToolstripStatus.Text = "Status: Ready";
                     labelToolstripStatus.ForeColor = Color.Black;
                     btnCancel.Visible = false;
@@ -300,64 +296,33 @@ namespace F_Key_Sender
             base.OnFormClosing(e);
         }
 
-        private void All_Buttons_Disabler()
+        private void ControlsAvailable(bool Enabled)
         {
-            // Disable all buttons
-            btnF13.Enabled = false;
-            btnF14.Enabled = false;
-            btnF15.Enabled = false;
-            btnF16.Enabled = false;
-            btnF17.Enabled = false;
-            btnF18.Enabled = false;
-            btnF19.Enabled = false;
-            btnF20.Enabled = false;
-            btnF21.Enabled = false;
-            btnF22.Enabled = false;
-            btnF23.Enabled = false;
-            btnF24.Enabled = false;
-            btnTestX.Enabled = false;
+            try
+            {
+                foreach (Control C in this.Controls)
+                {
+                    // Skip btnTestX - btnCancel - chkAlwaysOnTop
+                    if (C.Name == "btnTestX" | C.Name == "btnCancel" | C.Name == "chkAlwaysOnTop") { continue; }
 
-            // Disable checkboxes
-            checkBoxAlt.Enabled = false;
-            checkBoxCtrl.Enabled = false;
-            checkBoxShift.Enabled = false;
+                    // Enable/Disable all buttons
+                    if (C.GetType() == typeof(Button)) { C.Enabled = Enabled; }
 
-            // Disable numeric updowns
-            nudDelay.Enabled = false;
-            nudDuration.Enabled = false;
+                    // Enable/Disable checkboxes
+                    if (C.GetType() == typeof(BigCheckBox)) { C.Enabled = Enabled; }
 
-            // Disable dropdown
-            dropdownMethod.Enabled = false;
-        }
+                    // Enable/Disable numeric updowns
+                    nudDelay.Enabled = Enabled;
+                    nudDuration.Enabled = Enabled;
 
-        private void All_Buttons_Enabler()
-        {
-            // Enable all buttons
-            btnF13.Enabled = true;
-            btnF14.Enabled = true;
-            btnF15.Enabled = true;
-            btnF16.Enabled = true;
-            btnF17.Enabled = true;
-            btnF18.Enabled = true;
-            btnF19.Enabled = true;
-            btnF20.Enabled = true;
-            btnF21.Enabled = true;
-            btnF22.Enabled = true;
-            btnF23.Enabled = true;
-            btnF24.Enabled = true;
-            btnTestX.Enabled = true;
-
-            // Enable checkboxes
-            checkBoxAlt.Enabled = true;
-            checkBoxCtrl.Enabled = true;
-            checkBoxShift.Enabled = true;
-
-            // Enable numeric updowns
-            nudDelay.Enabled = true;
-            nudDuration.Enabled = true;
-
-            // Enable dropdown
-            dropdownMethod.Enabled = true;
+                    // Enable/Disable dropdown
+                    dropdownMethod.Enabled = Enabled;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
 
@@ -367,65 +332,13 @@ namespace F_Key_Sender
         }
 
         // Define button clicks to send F-key presses based on the button clicked
-        private void btnF13_Click(object sender, EventArgs e)
+        private void btnS_Click(object sender, EventArgs e)
         {
-            // Send F13 key press to function, it will handle which combos to send
-            SendKeyCombo("F13");
-        }
-
-        private void btnF14_Click(object sender, EventArgs e)
-        {
-            SendKeyCombo("F14");
-        }
-
-        private void btnF15_Click(object sender, EventArgs e)
-        {
-            SendKeyCombo("F15");
-        }
-
-        private void btnF16_Click(object sender, EventArgs e)
-        {
-            SendKeyCombo("F16");
-        }
-
-        private void btnF17_Click(object sender, EventArgs e)
-        {
-            SendKeyCombo("F17");
-        }
-
-        private void btnF18_Click(object sender, EventArgs e)
-        {
-            SendKeyCombo("F18");
-        }
-
-        private void btnF19_Click(object sender, EventArgs e)
-        {
-            SendKeyCombo("F19");
-        }
-
-        private void btnF20_Click(object sender, EventArgs e)
-        {
-            SendKeyCombo("F20");
-        }
-
-        private void btnF21_Click(object sender, EventArgs e)
-        {
-            SendKeyCombo("F21");
-        }
-
-        private void btnF22_Click(object sender, EventArgs e)
-        {
-            SendKeyCombo("F22");
-        }
-
-        private void btnF23_Click(object sender, EventArgs e)
-        {
-            SendKeyCombo("F23");
-        }
-
-        private void btnF24_Click(object sender, EventArgs e)
-        {
-            SendKeyCombo("F24");
+            // Send F-key key press to function, it will handle which combos to send
+            if (sender is Button)            {
+                string BtnName = ((Button)sender).Name.ToString().Substring(3,3);
+                SendKeyCombo(BtnName);
+            }
         }
 
         private void btnTestX_Click(object sender, EventArgs e)
