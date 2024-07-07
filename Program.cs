@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -16,6 +16,15 @@ namespace F_Key_Sender
         [STAThread]
         static void Main()
         {
+            _ = new System.Threading.Mutex(true, Application.ProductName, out bool CreatedNew);
+
+            if (!CreatedNew)
+            {
+                //app is already running! Exiting the application
+                MessageBox.Show("Application already running!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
