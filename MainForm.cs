@@ -117,41 +117,46 @@ namespace F_Key_Sender
 
                 ct.ThrowIfCancellationRequested();
 
-                // Press modifier keys
-                if (ctrl) keybd_event(0x11, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
-                if (shift) keybd_event(0x10, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
-                if (alt) keybd_event(0x12, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
-
-                // Press F-key
-                keybd_event(virtualKeyCode, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
-
-                // Hold the key for specified duration, update status text
-                this.Invoke((MethodInvoker)delegate
+                try
                 {
-                    labelToolstripStatus.Text = "Status: Holding Key...";
-                    labelToolstripStatus.ForeColor = Color.Green;
-                });
+                    // Press modifier keys
+                    if (ctrl) keybd_event(0x11, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
+                    if (shift) keybd_event(0x10, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
+                    if (alt) keybd_event(0x12, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
 
-                await Task.Delay((int)nudDuration.Value, ct);
+                    // Press F-key
+                    keybd_event(virtualKeyCode, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
 
-                ct.ThrowIfCancellationRequested();
+                    // Hold the key for specified duration, update status text
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        labelToolstripStatus.Text = "Status: Holding Key...";
+                        labelToolstripStatus.ForeColor = Color.Green;
+                    });
 
-                // Release F-key
-                keybd_event(virtualKeyCode, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+                    await Task.Delay((int)nudDuration.Value, ct);
 
-                // Release modifier keys
-                if (alt) keybd_event(0x12, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
-                if (shift) keybd_event(0x10, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
-                if (ctrl) keybd_event(0x11, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
-
-                // Re-enable all buttons after keys are released
-                this.Invoke((MethodInvoker)delegate
+                    ct.ThrowIfCancellationRequested();
+                }
+                finally
                 {
-                    All_Buttons_Enabler();
-                    labelToolstripStatus.Text = "Status: Ready";
-                    labelToolstripStatus.ForeColor = Color.Black;
-                    btnCancel.Visible = false;
-                });
+                    // Release F-key
+                    keybd_event(virtualKeyCode, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+
+                    // Release modifier keys
+                    if (alt) keybd_event(0x12, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+                    if (shift) keybd_event(0x10, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+                    if (ctrl) keybd_event(0x11, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+
+                    // Re-enable all buttons after keys are released
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        All_Buttons_Enabler();
+                        labelToolstripStatus.Text = "Status: Ready";
+                        labelToolstripStatus.ForeColor = Color.Black;
+                        btnCancel.Visible = false;
+                    });
+                }
             }, ct);
         }
 
@@ -266,34 +271,38 @@ namespace F_Key_Sender
                 if (shift) keyUpInputs.Add(CreateInput(keyCodes["LSHIFT"].vk, keyCodes["LSHIFT"].scan, true));
                 if (ctrl) keyUpInputs.Add(CreateInput(keyCodes["LCTRL"].vk, keyCodes["LCTRL"].scan, true));
 
-                // Send key down inputs
-                SendInput((uint)keyDownInputs.Count, keyDownInputs.ToArray(), Marshal.SizeOf(typeof(INPUT)));
-
-                // Wait for the key press duration using Task.Delay
-                this.Invoke((MethodInvoker)delegate
+                try
                 {
-                    labelToolstripStatus.Text = "Status: Holding Key...";
-                    labelToolstripStatus.ForeColor = Color.Green;
-                });
+                    // Send key down inputs
+                    SendInput((uint)keyDownInputs.Count, keyDownInputs.ToArray(), Marshal.SizeOf(typeof(INPUT)));
 
-                await Task.Delay((int)nudDuration.Value, ct);
+                    // Wait for the key press duration using Task.Delay
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        labelToolstripStatus.Text = "Status: Holding Key...";
+                        labelToolstripStatus.ForeColor = Color.Green;
+                    });
 
-                ct.ThrowIfCancellationRequested();
+                    await Task.Delay((int)nudDuration.Value, ct);
 
-                // Send key up inputs
-                SendInput((uint)keyUpInputs.Count, keyUpInputs.ToArray(), Marshal.SizeOf(typeof(INPUT)));
-
-                // Re-enable all buttons after keys are released
-                this.Invoke((MethodInvoker)delegate
+                    ct.ThrowIfCancellationRequested();
+                }
+                finally
                 {
-                    All_Buttons_Enabler();
-                    labelToolstripStatus.Text = "Status: Ready";
-                    labelToolstripStatus.ForeColor = Color.Black;
-                    btnCancel.Visible = false;
-                });
+                    // Send key up inputs
+                    SendInput((uint)keyUpInputs.Count, keyUpInputs.ToArray(), Marshal.SizeOf(typeof(INPUT)));
+
+                    // Re-enable all buttons after keys are released
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        All_Buttons_Enabler();
+                        labelToolstripStatus.Text = "Status: Ready";
+                        labelToolstripStatus.ForeColor = Color.Black;
+                        btnCancel.Visible = false;
+                    });
+                }
             }, ct);
         }
-
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             _cts?.Cancel();
