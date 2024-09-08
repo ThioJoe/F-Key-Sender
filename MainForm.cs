@@ -61,7 +61,7 @@ namespace F_Key_Sender
 
         private CancellationTokenSource _cts;
 
-        private async void SendKeyCombo(string key, bool customVK = false, bool customSC = false)
+        private async void SendKeyCombo(string key, bool customVK = false, bool customSC = false, bool customUnicode = false)
         {
             bool ctrl = checkBoxCtrl.Checked;
             bool shift = checkBoxShift.Checked;
@@ -76,7 +76,7 @@ namespace F_Key_Sender
             {
                 if (dropdownMethod.SelectedIndex == 0) // SendInput
                 {
-                    await SendKey_Method_SendInputAsync(key, ctrl, shift, alt, customVK, customSC, _cts.Token);
+                    await SendKey_Method_SendInputAsync(key, ctrl, shift, alt, customVK, customSC, customUnicode, _cts.Token);
                 }
                 else if (dropdownMethod.SelectedIndex == 1) // keybd_event
                 {
@@ -250,15 +250,26 @@ namespace F_Key_Sender
         }
 
         // Bypassing SendKeys and directly using SendInput due to limitations of F17 through F24 in .NET's SendKeys
-        private async Task SendKey_Method_SendInputAsync(string key, bool ctrl, bool shift, bool alt, bool customVK, bool customSC,CancellationToken ct)
+        private async Task SendKey_Method_SendInputAsync(string key, bool ctrl, bool shift, bool alt, bool customVK, bool customSC, bool customUnicode, CancellationToken ct)
         {
             ushort keyHex = 0;
             bool isExtended = false;
-            bool scanOnly = false;
+            bool scanOnly = false; // Set to true if for the VK code to be ignored (Note, if the VK value needs to be explicitly 0, do not use this)
 
+            // Here the 'codes dictionary is created either way, but values are only assigned if the key exists in keyCodes
+            // Otherwise the values will be set later based on the custom flags
             if (keyCodes.TryGetValue(key.ToUpper(), out var codes))
             {
                 // If the key exists in keyCodes, use its vk and scan codes
+                // No further action is needed here as 'codes' now contains the correct values
+            }
+
+            // Deal with custom key codes
+            if (customUnicode)
+            {
+                // If customUnicode is true, we use the UTF-16 code point of the character as the scan code
+                (keyHex, _) = StringToUShort(key); // Discard the isExtended value, it is not used for unicode
+                codes = (0, keyHex); // Only provide scan code, set vk to 0
             }
             else if (customVK)
             {
@@ -280,18 +291,26 @@ namespace F_Key_Sender
             await Task.Run(async () =>
             {
                 // Helper function to create a single input
-                INPUT CreateInput(ushort vk, ushort scan, bool isKeyUp = false, bool extended = false, bool scanFlag = false)
+                INPUT CreateInput(ushort vk, ushort scan, bool isKeyUp = false, bool extended = false, bool scanFlag = false, bool unicodeFlag = false)
                 {
                     uint dwFlags = 0;
 
                     if (isKeyUp)
                         dwFlags |= KEYEVENTF_KEYUP;
 
-                    if (extended)
-                        dwFlags |= KEYEVENTF_EXTENDEDKEY;
+                    if (unicodeFlag)
+                    {
+                        dwFlags |= KEYEVENTF_UNICODE;
+                        // Note: Be sure that vk is 0 when using KEYEVENTF_UNICODE
+                    }
+                    else // KEYEVENTF_UNICODE can only be combined with KEYEVENTF_KEYUP, so only check for the rest of the flags if unicode is false
+                    {
+                        if (extended)
+                            dwFlags |= KEYEVENTF_EXTENDEDKEY;
 
-                    if (scanFlag)
-                        dwFlags |= KEYEVENTF_SCANCODE;
+                        if (scanFlag)
+                            dwFlags |= KEYEVENTF_SCANCODE;
+                    }
 
                     return new INPUT
                     {
@@ -335,12 +354,12 @@ namespace F_Key_Sender
                 if (alt) keyDownInputs.Add(CreateInput(vk:keyCodes["LALT"].vk, scan:keyCodes["LALT"].scan, isKeyUp:false, extended:false));
 
                 // Add key down event for the main key
-                keyDownInputs.Add(CreateInput(vk:codes.vk, scan:codes.scan, isKeyUp:false, extended:isExtended, scanFlag:scanOnly));
+                keyDownInputs.Add(CreateInput(vk:codes.vk, scan:codes.scan, isKeyUp:false, extended:isExtended, scanFlag:scanOnly, unicodeFlag:customUnicode));
 
                 // -------- Add Key Up --------
 
                 // Add key up event for the main key
-                keyUpInputs.Add(CreateInput(vk:codes.vk, scan:codes.scan, isKeyUp:true, extended:isExtended, scanFlag: scanOnly));
+                keyUpInputs.Add(CreateInput(vk:codes.vk, scan:codes.scan, isKeyUp:true, extended:isExtended, scanFlag: scanOnly, unicodeFlag: customUnicode));
 
                 // Add key up events for modifiers
                 if (alt) keyUpInputs.Add(CreateInput(vk:keyCodes["LALT"].vk, scan: keyCodes["LALT"].scan, isKeyUp:true, extended:false));
@@ -535,24 +554,47 @@ namespace F_Key_Sender
         // Radio button to choose to use custom SC (scan) code in textBoxCustomCode
         private void radioButtonSC_CheckedChanged(object sender, EventArgs e)
         {
-
+            updateHexLabel();
         }
 
         // Radio button to choose to use custom VK (virtual key) code in textBoxCustomCode
         private void radioButtonVK_CheckedChanged(object sender, EventArgs e)
         {
-
+            updateHexLabel();
         }
 
+        // Radio button to choose to use a unicode code in textBoxCustomCode
+        private void radioButtonUnicode_CheckedChanged(object sender, EventArgs e)
+        {
+            updateHexLabel();
+        }
 
         private void textBoxCustomCode_TextChanged(object sender, EventArgs e)
         {
 
         }
 
+        private void updateHexLabel()
+        {
+            if (radioButtonVK.Checked)
+            {
+                labelHexPrefix.Text = "0x";
+            }
+            else if (radioButtonSC.Checked)
+            {
+                labelHexPrefix.Text = "0x";
+            }
+            else if (radioButtonUnicode.Checked)
+            {
+                labelHexPrefix.Text = "U+";
+            }
+        }
+
         private void buttonSendCustomKey_Click(object sender, EventArgs e)
         {
             string inputString = textBoxCustomCode.Text;
+
+            // ---------- Handle invalid inputs ----------
 
             // If it's empty then display error
             if (string.IsNullOrEmpty(inputString))
@@ -561,20 +603,34 @@ namespace F_Key_Sender
                 return;
             }
 
-            // If neither radio buttons are checked then display error
-            if (!radioButtonVK.Checked && !radioButtonSC.Checked)
+            // If no radio buttons are checked then display error
+            if (!radioButtonVK.Checked && !radioButtonSC.Checked && !radioButtonUnicode.Checked)
             {
-                MessageBox.Show("To send a custom key, select whether to use a virtual key code or a scan code.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("To send a custom key, you must select a type of code.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            // Check if the input starts with "0x" and remove it if true
-            if (inputString.StartsWith("0x"))
+            // If Unicode radio button is checked, and keybd_event is selected, display error
+            if (radioButtonUnicode.Checked && dropdownMethod.SelectedIndex == 1)
+            {
+                MessageBox.Show("Unicode key codes are not supported with keybd_event method. Use SendInput instead.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // -------------------------------------------
+            // Trim any leading or trailing whitespace
+            inputString = inputString.Trim();
+            // Check if the input starts with "0x" or "U+" and remove it if true
+            if (inputString.ToLower().StartsWith("0x"))
+            {
+                inputString = inputString.Substring(2);
+            }
+            else if (inputString.ToLower().StartsWith("u+"))
             {
                 inputString = inputString.Substring(2);
             }
 
-            // If it contains any non-hexadecimal characters except a space or starting with 0x then display error
+            // If it contains any non-hexadecimal characters except a space or starting with 0x U+ then display error
             if (!System.Text.RegularExpressions.Regex.IsMatch(inputString, @"^[0-9A-Fa-f\s]+$"))
             {
                 MessageBox.Show("Please enter a valid hexadecimal key code.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -589,6 +645,10 @@ namespace F_Key_Sender
             else if (radioButtonSC.Checked)
             {
                 SendKeyCombo(inputString, customVK: false, customSC:true);
+            }
+            else if (radioButtonUnicode.Checked)
+            {
+                SendKeyCombo(inputString, customVK: false, customSC: false, customUnicode: true);
             }
         }
 
@@ -615,6 +675,39 @@ namespace F_Key_Sender
             }
         }
 
+        // Display message box with info about using custom key codes
+        private void buttonCustomInfo_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(
+                " ----- Advanced Optional Custom Codes -----\n\n" +
+                "Allows you to specify a custom hex value to send as a\n" +
+                "Virtual Key (VK), Scan Code (SC), or Unicode Codepoint\n\n" +
+
+                "Modifier checkboxes will still be applied.\n\n\n" +
+
+                "For VK and SC:\n" +
+                "    This should only be 1 byte (2 characters), except\n" +
+                "    in the case of \"extended\" scan codes which are\n" +
+                "    two bytes, starting with E0.\n\n" +
+
+                "For Unicode:\n" +
+                "    This should be a 2-byte UTF-16 code point.\n\n\n" +
+
+                "Valid Scan Code & Virtual Key Examples:\n" +
+                "    0x3B\n" +
+                "    0xE05D\n" +
+                "    0x003B  (First 00 will be removed)\n\n" + 
+
+                "Valid Unicode Examples:\n" +
+                "    U+0041\n" +
+                "    U+03A9\n" +
+                "    U+1F600\n\n"
+                ,
+                "Custom Key Code Info",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information
+            );
+        }
     }
 
 

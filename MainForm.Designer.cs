@@ -66,6 +66,8 @@
             this.panelCustomOutline = new System.Windows.Forms.Panel();
             this.labelHexPrefix = new System.Windows.Forms.Label();
             this.infoCustomCode = new System.Windows.Forms.PictureBox();
+            this.radioButtonUnicode = new System.Windows.Forms.RadioButton();
+            this.buttonCustomInfo = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudDelay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudDuration)).BeginInit();
             this.statusStrip1.SuspendLayout();
@@ -239,23 +241,23 @@
             // 
             this.labelMethod.AutoSize = true;
             this.labelMethod.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelMethod.Location = new System.Drawing.Point(21, 351);
+            this.labelMethod.Location = new System.Drawing.Point(21, 349);
             this.labelMethod.Name = "labelMethod";
-            this.labelMethod.Size = new System.Drawing.Size(136, 20);
+            this.labelMethod.Size = new System.Drawing.Size(67, 20);
             this.labelMethod.TabIndex = 17;
-            this.labelMethod.Text = "Keypress Method:";
+            this.labelMethod.Text = "Method:";
             // 
             // dropdownMethod
             // 
             this.dropdownMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.dropdownMethod.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dropdownMethod.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dropdownMethod.FormattingEnabled = true;
             this.dropdownMethod.Items.AddRange(new object[] {
             "SendInput",
             "keybd_event"});
-            this.dropdownMethod.Location = new System.Drawing.Point(158, 346);
+            this.dropdownMethod.Location = new System.Drawing.Point(91, 347);
             this.dropdownMethod.Name = "dropdownMethod";
-            this.dropdownMethod.Size = new System.Drawing.Size(108, 28);
+            this.dropdownMethod.Size = new System.Drawing.Size(108, 26);
             this.dropdownMethod.TabIndex = 18;
             // 
             // btnTestX
@@ -321,7 +323,7 @@
             // 
             this.btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCancel.ForeColor = System.Drawing.Color.Red;
-            this.btnCancel.Location = new System.Drawing.Point(324, 420);
+            this.btnCancel.Location = new System.Drawing.Point(7, 424);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(90, 30);
             this.btnCancel.TabIndex = 23;
@@ -333,7 +335,7 @@
             // infoKeypressMethod
             // 
             this.infoKeypressMethod.Image = ((System.Drawing.Image)(resources.GetObject("infoKeypressMethod.Image")));
-            this.infoKeypressMethod.Location = new System.Drawing.Point(6, 353);
+            this.infoKeypressMethod.Location = new System.Drawing.Point(205, 353);
             this.infoKeypressMethod.Name = "infoKeypressMethod";
             this.infoKeypressMethod.Size = new System.Drawing.Size(16, 16);
             this.infoKeypressMethod.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -344,7 +346,7 @@
             // textBoxCustomCode
             // 
             this.textBoxCustomCode.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxCustomCode.Location = new System.Drawing.Point(34, 76);
+            this.textBoxCustomCode.Location = new System.Drawing.Point(30, 96);
             this.textBoxCustomCode.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxCustomCode.Name = "textBoxCustomCode";
             this.textBoxCustomCode.Size = new System.Drawing.Size(75, 26);
@@ -382,7 +384,7 @@
             // buttonSendCustomKey
             // 
             this.buttonSendCustomKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.buttonSendCustomKey.Location = new System.Drawing.Point(8, 108);
+            this.buttonSendCustomKey.Location = new System.Drawing.Point(9, 136);
             this.buttonSendCustomKey.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonSendCustomKey.Name = "buttonSendCustomKey";
             this.buttonSendCustomKey.Size = new System.Drawing.Size(117, 27);
@@ -419,7 +421,7 @@
             this.chkAlwaysOnTop.Checked = true;
             this.chkAlwaysOnTop.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkAlwaysOnTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkAlwaysOnTop.Location = new System.Drawing.Point(12, 400);
+            this.chkAlwaysOnTop.Location = new System.Drawing.Point(12, 385);
             this.chkAlwaysOnTop.Name = "chkAlwaysOnTop";
             this.chkAlwaysOnTop.Size = new System.Drawing.Size(193, 25);
             this.chkAlwaysOnTop.TabIndex = 0;
@@ -453,6 +455,7 @@
             // panelCustomOutline
             // 
             this.panelCustomOutline.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panelCustomOutline.Controls.Add(this.radioButtonUnicode);
             this.panelCustomOutline.Controls.Add(this.infoCustomCode);
             this.panelCustomOutline.Controls.Add(this.labelHexPrefix);
             this.panelCustomOutline.Controls.Add(this.labelCustom);
@@ -463,14 +466,14 @@
             this.panelCustomOutline.Location = new System.Drawing.Point(277, 255);
             this.panelCustomOutline.Margin = new System.Windows.Forms.Padding(0);
             this.panelCustomOutline.Name = "panelCustomOutline";
-            this.panelCustomOutline.Size = new System.Drawing.Size(137, 144);
+            this.panelCustomOutline.Size = new System.Drawing.Size(137, 182);
             this.panelCustomOutline.TabIndex = 31;
             // 
             // labelHexPrefix
             // 
             this.labelHexPrefix.AutoSize = true;
             this.labelHexPrefix.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelHexPrefix.Location = new System.Drawing.Point(9, 79);
+            this.labelHexPrefix.Location = new System.Drawing.Point(5, 99);
             this.labelHexPrefix.Name = "labelHexPrefix";
             this.labelHexPrefix.Size = new System.Drawing.Size(27, 19);
             this.labelHexPrefix.TabIndex = 31;
@@ -479,7 +482,7 @@
             // infoCustomCode
             // 
             this.infoCustomCode.Image = ((System.Drawing.Image)(resources.GetObject("infoCustomCode.Image")));
-            this.infoCustomCode.Location = new System.Drawing.Point(111, 81);
+            this.infoCustomCode.Location = new System.Drawing.Point(107, 101);
             this.infoCustomCode.Name = "infoCustomCode";
             this.infoCustomCode.Size = new System.Drawing.Size(16, 16);
             this.infoCustomCode.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -487,11 +490,36 @@
             this.infoCustomCode.TabStop = false;
             this.toolTip1.SetToolTip(this.infoCustomCode, resources.GetString("infoCustomCode.ToolTip"));
             // 
+            // radioButtonUnicode
+            // 
+            this.radioButtonUnicode.AutoSize = true;
+            this.radioButtonUnicode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioButtonUnicode.Location = new System.Drawing.Point(25, 73);
+            this.radioButtonUnicode.Margin = new System.Windows.Forms.Padding(2);
+            this.radioButtonUnicode.Name = "radioButtonUnicode";
+            this.radioButtonUnicode.Size = new System.Drawing.Size(76, 20);
+            this.radioButtonUnicode.TabIndex = 33;
+            this.radioButtonUnicode.TabStop = true;
+            this.radioButtonUnicode.Text = "Unicode";
+            this.radioButtonUnicode.UseVisualStyleBackColor = true;
+            this.radioButtonUnicode.CheckedChanged += new System.EventHandler(this.radioButtonUnicode_CheckedChanged);
+            // 
+            // buttonCustomInfo
+            // 
+            this.buttonCustomInfo.Location = new System.Drawing.Point(225, 413);
+            this.buttonCustomInfo.Name = "buttonCustomInfo";
+            this.buttonCustomInfo.Size = new System.Drawing.Size(27, 23);
+            this.buttonCustomInfo.TabIndex = 32;
+            this.buttonCustomInfo.Text = "?";
+            this.buttonCustomInfo.UseVisualStyleBackColor = true;
+            this.buttonCustomInfo.Click += new System.EventHandler(this.buttonCustomInfo_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(427, 481);
+            this.Controls.Add(this.buttonCustomInfo);
             this.Controls.Add(this.infoKeypressMethod);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.statusStrip1);
@@ -574,5 +602,7 @@
         private System.Windows.Forms.Panel panelCustomOutline;
         private System.Windows.Forms.Label labelHexPrefix;
         private System.Windows.Forms.PictureBox infoCustomCode;
+        private System.Windows.Forms.RadioButton radioButtonUnicode;
+        private System.Windows.Forms.Button buttonCustomInfo;
     }
 }
