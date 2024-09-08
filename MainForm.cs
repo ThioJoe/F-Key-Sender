@@ -38,11 +38,13 @@ namespace F_Key_Sender
         };
 
         // Flags for KEYBDINPUT structure used in API calls
+        // Reference: https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-keybdinput
         const uint INPUT_KEYBOARD = 1;
         const uint KEYEVENTF_KEYDOWN = 0x0000;
         const uint KEYEVENTF_KEYUP = 0x0002;
         const uint KEYEVENTF_SCANCODE = 0x0008;
         const uint KEYEVENTF_EXTENDEDKEY = 0x0001;
+        const uint KEYEVENTF_UNICODE = 0x0004;
 
         private readonly Stopwatch stopwatch = new Stopwatch();
 
@@ -104,21 +106,38 @@ namespace F_Key_Sender
             bool isExtended = false;
             ushort keyHex = 0;
             byte virtualKeyCode = 0;
+            byte scanCode = 0;
+            uint keydwFlagsDown = 0;
+            uint keydwFlagsUp = KEYEVENTF_KEYUP;
 
             if (customVK)
             {
                 (keyHex, isExtended) = StringToUShort(key);
                 virtualKeyCode = BitConverter.GetBytes(keyHex)[0];
+
+                // If the key is extended, set the extended key flag
+                if (isExtended)
+                {
+                    keydwFlagsDown |= KEYEVENTF_EXTENDEDKEY;
+                    keydwFlagsUp |= KEYEVENTF_EXTENDEDKEY;
+                }
             }
             else if (customSC)
             {
-                // Display error because this method doesn't support scan codes
-                MessageBox.Show("keybd_event does not support scan codes. Please use SendInput instead.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                (keyHex, isExtended) = StringToUShort(key);
+                scanCode = BitConverter.GetBytes(keyHex)[0];
+
+                // If the key is extended, set the extended key flag
+                if (isExtended)
+                {
+                    keydwFlagsDown |= KEYEVENTF_EXTENDEDKEY;
+                    keydwFlagsUp |= KEYEVENTF_EXTENDEDKEY;
+                }
             }
             else
             {
                 virtualKeyCode = BitConverter.GetBytes(keyCodes[key].vk)[0];
+                scanCode = BitConverter.GetBytes(keyCodes[key].scan)[0];
             }
 
             await Task.Run(async () =>
@@ -139,12 +158,13 @@ namespace F_Key_Sender
                 try
                 {
                     // Press modifier keys
-                    if (ctrl) keybd_event(0x11, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
-                    if (shift) keybd_event(0x10, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
-                    if (alt) keybd_event(0x12, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
+                    if (ctrl) keybd_event(0x11, 29, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
+                    if (shift) keybd_event(0x10, 42, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
+                    if (alt) keybd_event(0x12, 56, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
 
-                    // Press F-key
-                    keybd_event(virtualKeyCode, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
+                    // Send the down key event for main key
+                    // keybd_event: First parameter is the virtual key code, second is the scan code, third is the flags, fourth is the extra info
+                    keybd_event(virtualKeyCode, scanCode, keydwFlagsDown, UIntPtr.Zero);
 
                     // Hold the key for specified duration, update status text
                     this.Invoke((MethodInvoker)delegate
@@ -159,13 +179,13 @@ namespace F_Key_Sender
                 }
                 finally
                 {
-                    // Release F-key
-                    keybd_event(virtualKeyCode, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+                    // Send key up event for main key
+                    keybd_event(virtualKeyCode, scanCode, keydwFlagsUp, UIntPtr.Zero);
 
                     // Release modifier keys
-                    if (alt) keybd_event(0x12, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
-                    if (shift) keybd_event(0x10, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
-                    if (ctrl) keybd_event(0x11, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+                    if (alt) keybd_event(0x12, 56, KEYEVENTF_KEYUP, UIntPtr.Zero);
+                    if (shift) keybd_event(0x10, 42, KEYEVENTF_KEYUP, UIntPtr.Zero);
+                    if (ctrl) keybd_event(0x11, 29, KEYEVENTF_KEYUP, UIntPtr.Zero);
 
                     // Re-enable all buttons after keys are released
                     this.Invoke((MethodInvoker)delegate
@@ -331,7 +351,8 @@ namespace F_Key_Sender
 
                 try
                 {
-                    // Send key down inputs
+                    // Send key down inputs all at once
+                    // SendInput: First parameter is the number of INPUT structures, second is the array of inputs, third is the size of the INPUT struct
                     SendInput((uint)keyDownInputs.Count, keyDownInputs.ToArray(), Marshal.SizeOf(typeof(INPUT)));
 
                     // Wait for the key press duration using Task.Delay
@@ -347,7 +368,7 @@ namespace F_Key_Sender
                 }
                 finally
                 {
-                    // Send key up inputs
+                    // Send key up inputs all at once
                     SendInput((uint)keyUpInputs.Count, keyUpInputs.ToArray(), Marshal.SizeOf(typeof(INPUT)));
 
                     // Re-enable all buttons after keys are released
