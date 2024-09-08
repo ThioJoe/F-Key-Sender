@@ -58,7 +58,7 @@ namespace F_Key_Sender
 
         private CancellationTokenSource _cts;
 
-        private async void SendKeyCombo(string key)
+        private async void SendKeyCombo(string key, bool customVK = false, bool customSC = false)
         {
             bool ctrl = checkBoxCtrl.Checked;
             bool shift = checkBoxShift.Checked;
@@ -73,11 +73,11 @@ namespace F_Key_Sender
             {
                 if (dropdownMethod.SelectedIndex == 0) // SendInput
                 {
-                    await SendKey_Method_SendInputAsync(key, ctrl, shift, alt, _cts.Token);
+                    await SendKey_Method_SendInputAsync(key, ctrl, shift, alt, customVK, customSC, _cts.Token);
                 }
                 else if (dropdownMethod.SelectedIndex == 1) // keybd_event
                 {
-                    await SendKey_keybd_eventAsync(key, ctrl, shift, alt, _cts.Token);
+                    await SendKey_keybd_eventAsync(key, ctrl, shift, alt, customVK, customSC, _cts.Token);
                 }
             }
             catch (OperationCanceledException)
@@ -98,7 +98,7 @@ namespace F_Key_Sender
         [DllImport("user32.dll")]
         static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
 
-        private async Task SendKey_keybd_eventAsync(string key, bool ctrl, bool shift, bool alt, CancellationToken ct)
+        private async Task SendKey_keybd_eventAsync(string key, bool ctrl, bool shift, bool alt, bool customVK, bool customSC, CancellationToken ct)
         {
             byte virtualKeyCode = BitConverter.GetBytes(keyCodes[key].vk)[0];
 
@@ -211,11 +211,21 @@ namespace F_Key_Sender
         }
 
         // Bypassing SendKeys and directly using SendInput due to limitations of F17 through F24 in .NET's SendKeys
-        private async Task SendKey_Method_SendInputAsync(string key, bool ctrl, bool shift, bool alt, CancellationToken ct)
+        private async Task SendKey_Method_SendInputAsync(string key, bool ctrl, bool shift, bool alt, bool customVK, bool customSC,CancellationToken ct)
         {
-            if (!keyCodes.TryGetValue(key.ToUpper(), out var codes))
+            if (keyCodes.TryGetValue(key.ToUpper(), out var codes))
             {
-                return; // Invalid key
+                // If the key exists in keyCodes, use its vk and scan codes
+            }
+            else if (customVK)
+            {
+                // If customVK is true, create the codes dictionary with a custom virtual key code
+                codes = (StringToUShort(key), 0); // Only provide vk, set scan code to 0
+            }
+            else if (customSC)
+            {
+                // If customSC is true, create the codes dictionary with a custom scan code
+                codes = (0, StringToUShort(key)); // Only provide scan code, set vk to 0
             }
 
             await Task.Run(async () =>
@@ -470,9 +480,24 @@ namespace F_Key_Sender
         {
 
         }
+
         private void buttonSendCustomKey_Click(object sender, EventArgs e)
         {
+            if (radioButtonVK.Checked)
+            {
+                SendKeyCombo(textBoxCustomCode.Text, customVK:true, customSC:false);
+            }
+            else if (radioButtonSC.Checked)
+            {
+                SendKeyCombo(textBoxCustomCode.Text, customVK: false, customSC:true);
+            }
+        }
 
+        // Convert string to ushort for both VK and SC
+        private ushort StringToUShort(string input)
+        {
+            // Strip off 0x if it's there, remove any spaces, and convert to ushort
+            return ushort.Parse(input.Replace("0x", "").Replace(" ", ""), System.Globalization.NumberStyles.HexNumber);
         }
     }
 
