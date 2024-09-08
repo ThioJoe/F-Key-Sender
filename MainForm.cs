@@ -452,6 +452,28 @@ namespace F_Key_Sender
                 btnCancel.Enabled = false;
             }
         }
+
+        // Radio button to choose to use custom SC (scan) code in textBoxCustomCode
+        private void radioButtonSC_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        // Radio button to choose to use custom VK (virtual key) code in textBoxCustomCode
+        private void radioButtonVK_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+
+        private void textBoxCustomCode_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+        private void buttonSendCustomKey_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 
 
