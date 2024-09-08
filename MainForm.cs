@@ -234,6 +234,7 @@ namespace F_Key_Sender
         {
             ushort keyHex = 0;
             bool isExtended = false;
+            bool scanOnly = false;
 
             if (keyCodes.TryGetValue(key.ToUpper(), out var codes))
             {
@@ -250,6 +251,7 @@ namespace F_Key_Sender
                 (keyHex, isExtended) = StringToUShort(key);
                 // If customSC is true, create the codes dictionary with a custom scan code
                 codes = (0, keyHex); // Only provide scan code, set vk to 0
+                scanOnly = true;
 
                 // DEBUG display message with the scan code
                 //MessageBox.Show($"Scan Code: {codes.scan}", "Scan Code", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -258,7 +260,7 @@ namespace F_Key_Sender
             await Task.Run(async () =>
             {
                 // Helper function to create a single input
-                INPUT CreateInput(ushort vk, ushort scan, bool isKeyUp = false, bool extended = false)
+                INPUT CreateInput(ushort vk, ushort scan, bool isKeyUp = false, bool extended = false, bool scanFlag = false)
                 {
                     uint dwFlags = 0;
 
@@ -267,6 +269,9 @@ namespace F_Key_Sender
 
                     if (extended)
                         dwFlags |= KEYEVENTF_EXTENDEDKEY;
+
+                    if (scanFlag)
+                        dwFlags |= KEYEVENTF_SCANCODE;
 
                     return new INPUT
                     {
@@ -302,19 +307,27 @@ namespace F_Key_Sender
                 List<INPUT> keyDownInputs = new List<INPUT>();
                 List<INPUT> keyUpInputs = new List<INPUT>();
 
+                // -------- Add Key Down --------
+
                 // Add key down events for modifiers
                 if (ctrl) keyDownInputs.Add(CreateInput(vk:keyCodes["LCTRL"].vk, scan:keyCodes["LCTRL"].scan, isKeyUp:false, extended:false));
                 if (shift) keyDownInputs.Add(CreateInput(vk:keyCodes["LSHIFT"].vk, scan:keyCodes["LSHIFT"].scan, isKeyUp:false, extended:false));
                 if (alt) keyDownInputs.Add(CreateInput(vk:keyCodes["LALT"].vk, scan:keyCodes["LALT"].scan, isKeyUp:false, extended:false));
 
                 // Add key down event for the main key
-                keyDownInputs.Add(CreateInput(vk:codes.vk, scan:codes.scan, isKeyUp:false, extended:isExtended));
+                keyDownInputs.Add(CreateInput(vk:codes.vk, scan:codes.scan, isKeyUp:false, extended:isExtended, scanFlag:scanOnly));
 
-                // Add key up events in reverse order
-                keyUpInputs.Add(CreateInput(vk:codes.vk, scan:codes.scan, isKeyUp:true, extended:isExtended));
+                // -------- Add Key Up --------
+
+                // Add key up event for the main key
+                keyUpInputs.Add(CreateInput(vk:codes.vk, scan:codes.scan, isKeyUp:true, extended:isExtended, scanFlag: scanOnly));
+
+                // Add key up events for modifiers
                 if (alt) keyUpInputs.Add(CreateInput(vk:keyCodes["LALT"].vk, scan: keyCodes["LALT"].scan, isKeyUp:true, extended:false));
                 if (shift) keyUpInputs.Add(CreateInput(vk:keyCodes["LSHIFT"].vk, scan:keyCodes["LSHIFT"].scan, isKeyUp:true, extended:false));
                 if (ctrl) keyUpInputs.Add(CreateInput(vk:keyCodes["LCTRL"].vk, scan:keyCodes["LCTRL"].scan, isKeyUp:true, extended:false));
+
+                //--------------------------------
 
                 try
                 {
