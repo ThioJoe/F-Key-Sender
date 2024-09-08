@@ -124,7 +124,7 @@
     <value>132, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="pictureBox1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="infoKeypressMethod.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
         DAAACwwBP0AiyAAAANdJREFUOE+lk7ENwjAQRb0ALEGXCWgtpcgCLEQXiQoGgCId1JkACDOhSOFedLaO
@@ -134,7 +134,7 @@
         AElFTkSuQmCC
 </value>
   </data>
-  <data name="pictureBox1.ToolTip" xml:space="preserve">
+  <data name="infoKeypressMethod.ToolTip" xml:space="preserve">
     <value>SendInput (Default): Modern, more reliable method for simulating keystrokes. 
    &gt; Recommended for most use cases.
 
@@ -142,6 +142,32 @@ keybd_event: Older method for generating keyboard input.
    &gt; Less reliable and may not work in all contexts, especially with elevated
        privilege applications. Use only if SendInput doesn't work for your
        specific needs.</value>
+  </data>
+  <data name="infoCustomCode.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
+        DAAACwwBP0AiyAAAANdJREFUOE+lk7ENwjAQRb0ALEGXCWgtpcgCLEQXiQoGgCId1JkACDOhSOFedLaO
+        4ERAiied/7/7ih3bee9dnueWtXAWWqFTqC8CXuxl1hVFYTkKnXIX9gp10E9CnOmTdHEVaNgJS9UsCwGP
+        nhsasyGgUmODYTgoVqOH3ioEZCrwqbYR0GGo08vZZATULIxpWSkpj4CaAIabgRl4KCmvYTYElAMzMLYF
+        KL8JeCop7y1gbAtTAXELU4fYKikvHuLs34gwdpG2itU+LlIw/rvKFIbfH9O85+zdC8b3LMIYY2EGAAAA
+        AElFTkSuQmCC
+</value>
+  </data>
+  <data name="infoCustomCode.ToolTip" xml:space="preserve">
+    <value>Allows you to specify a custom hex value to send
+as a Virtual Key (VK) or Scan Code (SC).
+
+This should only be 1 byte (2 characters), except
+in the case of "extended" scan codes which
+are two bytes, starting with E0.
+
+Modifier checkboxes will still be applied.
+
+Valid Examples:
+  0x3B 
+  0xE05D
+  0x003B  (First 00 will be removed)
+  </value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

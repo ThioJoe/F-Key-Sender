@@ -53,29 +53,33 @@
             this.labelToolstripStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.btnCancel = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.checkBoxAlt = new F_Key_Sender.BigCheckBox();
-            this.chkAlwaysOnTop = new F_Key_Sender.BigCheckBox();
-            this.checkBoxShift = new F_Key_Sender.BigCheckBox();
-            this.checkBoxCtrl = new F_Key_Sender.BigCheckBox();
+            this.infoKeypressMethod = new System.Windows.Forms.PictureBox();
             this.textBoxCustomCode = new System.Windows.Forms.TextBox();
             this.radioButtonVK = new System.Windows.Forms.RadioButton();
             this.radioButtonSC = new System.Windows.Forms.RadioButton();
             this.buttonSendCustomKey = new System.Windows.Forms.Button();
             this.labelCustom = new System.Windows.Forms.Label();
+            this.checkBoxAlt = new F_Key_Sender.BigCheckBox();
+            this.chkAlwaysOnTop = new F_Key_Sender.BigCheckBox();
+            this.checkBoxShift = new F_Key_Sender.BigCheckBox();
+            this.checkBoxCtrl = new F_Key_Sender.BigCheckBox();
+            this.panelCustomOutline = new System.Windows.Forms.Panel();
+            this.labelHexPrefix = new System.Windows.Forms.Label();
+            this.infoCustomCode = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.nudDelay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudDuration)).BeginInit();
             this.statusStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.infoKeypressMethod)).BeginInit();
+            this.panelCustomOutline.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.infoCustomCode)).BeginInit();
             this.SuspendLayout();
             // 
             // btnF13
             // 
             this.btnF13.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnF13.Location = new System.Drawing.Point(38, 38);
-            this.btnF13.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnF13.Location = new System.Drawing.Point(25, 25);
             this.btnF13.Name = "btnF13";
-            this.btnF13.Size = new System.Drawing.Size(112, 54);
+            this.btnF13.Size = new System.Drawing.Size(75, 35);
             this.btnF13.TabIndex = 0;
             this.btnF13.Text = "F13";
             this.btnF13.UseVisualStyleBackColor = true;
@@ -84,10 +88,9 @@
             // btnF14
             // 
             this.btnF14.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnF14.Location = new System.Drawing.Point(188, 38);
-            this.btnF14.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnF14.Location = new System.Drawing.Point(125, 25);
             this.btnF14.Name = "btnF14";
-            this.btnF14.Size = new System.Drawing.Size(112, 54);
+            this.btnF14.Size = new System.Drawing.Size(75, 35);
             this.btnF14.TabIndex = 1;
             this.btnF14.Text = "F14";
             this.btnF14.UseVisualStyleBackColor = true;
@@ -96,10 +99,9 @@
             // btnF15
             // 
             this.btnF15.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnF15.Location = new System.Drawing.Point(338, 38);
-            this.btnF15.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnF15.Location = new System.Drawing.Point(225, 25);
             this.btnF15.Name = "btnF15";
-            this.btnF15.Size = new System.Drawing.Size(112, 54);
+            this.btnF15.Size = new System.Drawing.Size(75, 35);
             this.btnF15.TabIndex = 2;
             this.btnF15.Text = "F15";
             this.btnF15.UseVisualStyleBackColor = true;
@@ -108,10 +110,9 @@
             // btnF16
             // 
             this.btnF16.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnF16.Location = new System.Drawing.Point(488, 38);
-            this.btnF16.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnF16.Location = new System.Drawing.Point(325, 25);
             this.btnF16.Name = "btnF16";
-            this.btnF16.Size = new System.Drawing.Size(112, 54);
+            this.btnF16.Size = new System.Drawing.Size(75, 35);
             this.btnF16.TabIndex = 3;
             this.btnF16.Text = "F16";
             this.btnF16.UseVisualStyleBackColor = true;
@@ -120,10 +121,9 @@
             // btnF17
             // 
             this.btnF17.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnF17.Location = new System.Drawing.Point(38, 115);
-            this.btnF17.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnF17.Location = new System.Drawing.Point(25, 75);
             this.btnF17.Name = "btnF17";
-            this.btnF17.Size = new System.Drawing.Size(112, 54);
+            this.btnF17.Size = new System.Drawing.Size(75, 35);
             this.btnF17.TabIndex = 4;
             this.btnF17.Text = "F17";
             this.btnF17.UseVisualStyleBackColor = true;
@@ -132,10 +132,9 @@
             // btnF18
             // 
             this.btnF18.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnF18.Location = new System.Drawing.Point(188, 115);
-            this.btnF18.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnF18.Location = new System.Drawing.Point(125, 75);
             this.btnF18.Name = "btnF18";
-            this.btnF18.Size = new System.Drawing.Size(112, 54);
+            this.btnF18.Size = new System.Drawing.Size(75, 35);
             this.btnF18.TabIndex = 5;
             this.btnF18.Text = "F18";
             this.btnF18.UseVisualStyleBackColor = true;
@@ -144,10 +143,9 @@
             // btnF19
             // 
             this.btnF19.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnF19.Location = new System.Drawing.Point(338, 115);
-            this.btnF19.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnF19.Location = new System.Drawing.Point(225, 75);
             this.btnF19.Name = "btnF19";
-            this.btnF19.Size = new System.Drawing.Size(112, 54);
+            this.btnF19.Size = new System.Drawing.Size(75, 35);
             this.btnF19.TabIndex = 6;
             this.btnF19.Text = "F19";
             this.btnF19.UseVisualStyleBackColor = true;
@@ -156,10 +154,9 @@
             // btnF20
             // 
             this.btnF20.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnF20.Location = new System.Drawing.Point(488, 115);
-            this.btnF20.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnF20.Location = new System.Drawing.Point(325, 75);
             this.btnF20.Name = "btnF20";
-            this.btnF20.Size = new System.Drawing.Size(112, 54);
+            this.btnF20.Size = new System.Drawing.Size(75, 35);
             this.btnF20.TabIndex = 7;
             this.btnF20.Text = "F20";
             this.btnF20.UseVisualStyleBackColor = true;
@@ -168,10 +165,9 @@
             // btnF21
             // 
             this.btnF21.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnF21.Location = new System.Drawing.Point(38, 192);
-            this.btnF21.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnF21.Location = new System.Drawing.Point(25, 125);
             this.btnF21.Name = "btnF21";
-            this.btnF21.Size = new System.Drawing.Size(112, 54);
+            this.btnF21.Size = new System.Drawing.Size(75, 35);
             this.btnF21.TabIndex = 8;
             this.btnF21.Text = "F21";
             this.btnF21.UseVisualStyleBackColor = true;
@@ -180,10 +176,9 @@
             // btnF22
             // 
             this.btnF22.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnF22.Location = new System.Drawing.Point(188, 192);
-            this.btnF22.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnF22.Location = new System.Drawing.Point(125, 125);
             this.btnF22.Name = "btnF22";
-            this.btnF22.Size = new System.Drawing.Size(112, 54);
+            this.btnF22.Size = new System.Drawing.Size(75, 35);
             this.btnF22.TabIndex = 9;
             this.btnF22.Text = "F22";
             this.btnF22.UseVisualStyleBackColor = true;
@@ -192,10 +187,9 @@
             // btnF23
             // 
             this.btnF23.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnF23.Location = new System.Drawing.Point(338, 192);
-            this.btnF23.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnF23.Location = new System.Drawing.Point(225, 125);
             this.btnF23.Name = "btnF23";
-            this.btnF23.Size = new System.Drawing.Size(112, 54);
+            this.btnF23.Size = new System.Drawing.Size(75, 35);
             this.btnF23.TabIndex = 10;
             this.btnF23.Text = "F23";
             this.btnF23.UseVisualStyleBackColor = true;
@@ -204,10 +198,9 @@
             // btnF24
             // 
             this.btnF24.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnF24.Location = new System.Drawing.Point(488, 192);
-            this.btnF24.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnF24.Location = new System.Drawing.Point(325, 125);
             this.btnF24.Name = "btnF24";
-            this.btnF24.Size = new System.Drawing.Size(112, 54);
+            this.btnF24.Size = new System.Drawing.Size(75, 35);
             this.btnF24.TabIndex = 11;
             this.btnF24.Text = "F24";
             this.btnF24.UseVisualStyleBackColor = true;
@@ -216,15 +209,14 @@
             // nudDelay
             // 
             this.nudDelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.nudDelay.Location = new System.Drawing.Point(237, 406);
-            this.nudDelay.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.nudDelay.Location = new System.Drawing.Point(173, 264);
             this.nudDelay.Maximum = new decimal(new int[] {
             10,
             0,
             0,
             0});
             this.nudDelay.Name = "nudDelay";
-            this.nudDelay.Size = new System.Drawing.Size(93, 35);
+            this.nudDelay.Size = new System.Drawing.Size(62, 26);
             this.nudDelay.TabIndex = 14;
             this.nudDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.nudDelay.Value = new decimal(new int[] {
@@ -237,10 +229,9 @@
             // 
             this.labelDelay.AutoSize = true;
             this.labelDelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelDelay.Location = new System.Drawing.Point(32, 409);
-            this.labelDelay.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelDelay.Location = new System.Drawing.Point(21, 266);
             this.labelDelay.Name = "labelDelay";
-            this.labelDelay.Size = new System.Drawing.Size(197, 29);
+            this.labelDelay.Size = new System.Drawing.Size(130, 20);
             this.labelDelay.TabIndex = 15;
             this.labelDelay.Text = "Delay (Seconds):";
             // 
@@ -248,10 +239,9 @@
             // 
             this.labelMethod.AutoSize = true;
             this.labelMethod.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelMethod.Location = new System.Drawing.Point(32, 528);
-            this.labelMethod.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelMethod.Location = new System.Drawing.Point(21, 351);
             this.labelMethod.Name = "labelMethod";
-            this.labelMethod.Size = new System.Drawing.Size(207, 29);
+            this.labelMethod.Size = new System.Drawing.Size(136, 20);
             this.labelMethod.TabIndex = 17;
             this.labelMethod.Text = "Keypress Method:";
             // 
@@ -263,19 +253,17 @@
             this.dropdownMethod.Items.AddRange(new object[] {
             "SendInput",
             "keybd_event"});
-            this.dropdownMethod.Location = new System.Drawing.Point(237, 523);
-            this.dropdownMethod.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.dropdownMethod.Location = new System.Drawing.Point(158, 346);
             this.dropdownMethod.Name = "dropdownMethod";
-            this.dropdownMethod.Size = new System.Drawing.Size(220, 37);
+            this.dropdownMethod.Size = new System.Drawing.Size(108, 28);
             this.dropdownMethod.TabIndex = 18;
             // 
             // btnTestX
             // 
             this.btnTestX.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnTestX.Location = new System.Drawing.Point(366, 608);
-            this.btnTestX.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnTestX.Location = new System.Drawing.Point(0, 3);
             this.btnTestX.Name = "btnTestX";
-            this.btnTestX.Size = new System.Drawing.Size(73, 38);
+            this.btnTestX.Size = new System.Drawing.Size(22, 25);
             this.btnTestX.TabIndex = 19;
             this.btnTestX.Text = "X";
             this.btnTestX.UseVisualStyleBackColor = true;
@@ -286,25 +274,23 @@
             // 
             this.labelNudDuration.AutoSize = true;
             this.labelNudDuration.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelNudDuration.Location = new System.Drawing.Point(32, 471);
-            this.labelNudDuration.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelNudDuration.Location = new System.Drawing.Point(21, 306);
             this.labelNudDuration.Name = "labelNudDuration";
-            this.labelNudDuration.Size = new System.Drawing.Size(220, 29);
+            this.labelNudDuration.Size = new System.Drawing.Size(146, 20);
             this.labelNudDuration.TabIndex = 21;
             this.labelNudDuration.Text = "Hold Duration (ms):";
             // 
             // nudDuration
             // 
             this.nudDuration.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.nudDuration.Location = new System.Drawing.Point(260, 468);
-            this.nudDuration.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.nudDuration.Location = new System.Drawing.Point(173, 304);
             this.nudDuration.Maximum = new decimal(new int[] {
             9999999,
             0,
             0,
             0});
             this.nudDuration.Name = "nudDuration";
-            this.nudDuration.Size = new System.Drawing.Size(93, 35);
+            this.nudDuration.Size = new System.Drawing.Size(62, 26);
             this.nudDuration.TabIndex = 20;
             this.nudDuration.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.nudDuration.Value = new decimal(new int[] {
@@ -318,10 +304,9 @@
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.labelToolstripStatus});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 666);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 459);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Padding = new System.Windows.Forms.Padding(2, 0, 21, 0);
-            this.statusStrip1.Size = new System.Drawing.Size(640, 32);
+            this.statusStrip1.Size = new System.Drawing.Size(427, 22);
             this.statusStrip1.SizingGrip = false;
             this.statusStrip1.TabIndex = 22;
             this.statusStrip1.Text = "statusStrip1";
@@ -329,43 +314,101 @@
             // labelToolstripStatus
             // 
             this.labelToolstripStatus.Name = "labelToolstripStatus";
-            this.labelToolstripStatus.Size = new System.Drawing.Size(117, 25);
+            this.labelToolstripStatus.Size = new System.Drawing.Size(77, 17);
             this.labelToolstripStatus.Text = "Status: Ready";
             // 
             // btnCancel
             // 
             this.btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCancel.ForeColor = System.Drawing.Color.Red;
-            this.btnCancel.Location = new System.Drawing.Point(488, 600);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnCancel.Location = new System.Drawing.Point(324, 420);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(135, 46);
+            this.btnCancel.Size = new System.Drawing.Size(90, 30);
             this.btnCancel.TabIndex = 23;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Visible = false;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // pictureBox1
+            // infoKeypressMethod
             // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(468, 534);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(16, 16);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox1.TabIndex = 24;
-            this.pictureBox1.TabStop = false;
-            this.toolTip1.SetToolTip(this.pictureBox1, resources.GetString("pictureBox1.ToolTip"));
+            this.infoKeypressMethod.Image = ((System.Drawing.Image)(resources.GetObject("infoKeypressMethod.Image")));
+            this.infoKeypressMethod.Location = new System.Drawing.Point(6, 353);
+            this.infoKeypressMethod.Name = "infoKeypressMethod";
+            this.infoKeypressMethod.Size = new System.Drawing.Size(16, 16);
+            this.infoKeypressMethod.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.infoKeypressMethod.TabIndex = 24;
+            this.infoKeypressMethod.TabStop = false;
+            this.toolTip1.SetToolTip(this.infoKeypressMethod, resources.GetString("infoKeypressMethod.ToolTip"));
+            // 
+            // textBoxCustomCode
+            // 
+            this.textBoxCustomCode.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxCustomCode.Location = new System.Drawing.Point(34, 76);
+            this.textBoxCustomCode.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBoxCustomCode.Name = "textBoxCustomCode";
+            this.textBoxCustomCode.Size = new System.Drawing.Size(75, 26);
+            this.textBoxCustomCode.TabIndex = 25;
+            this.textBoxCustomCode.TextChanged += new System.EventHandler(this.textBoxCustomCode_TextChanged);
+            // 
+            // radioButtonVK
+            // 
+            this.radioButtonVK.AutoSize = true;
+            this.radioButtonVK.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioButtonVK.Location = new System.Drawing.Point(26, 33);
+            this.radioButtonVK.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.radioButtonVK.Name = "radioButtonVK";
+            this.radioButtonVK.Size = new System.Drawing.Size(78, 20);
+            this.radioButtonVK.TabIndex = 26;
+            this.radioButtonVK.TabStop = true;
+            this.radioButtonVK.Text = "VK Code";
+            this.radioButtonVK.UseVisualStyleBackColor = true;
+            this.radioButtonVK.CheckedChanged += new System.EventHandler(this.radioButtonVK_CheckedChanged);
+            // 
+            // radioButtonSC
+            // 
+            this.radioButtonSC.AutoSize = true;
+            this.radioButtonSC.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioButtonSC.Location = new System.Drawing.Point(26, 53);
+            this.radioButtonSC.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.radioButtonSC.Name = "radioButtonSC";
+            this.radioButtonSC.Size = new System.Drawing.Size(79, 20);
+            this.radioButtonSC.TabIndex = 27;
+            this.radioButtonSC.TabStop = true;
+            this.radioButtonSC.Text = "SC Code";
+            this.radioButtonSC.UseVisualStyleBackColor = true;
+            this.radioButtonSC.CheckedChanged += new System.EventHandler(this.radioButtonSC_CheckedChanged);
+            // 
+            // buttonSendCustomKey
+            // 
+            this.buttonSendCustomKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.buttonSendCustomKey.Location = new System.Drawing.Point(8, 108);
+            this.buttonSendCustomKey.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonSendCustomKey.Name = "buttonSendCustomKey";
+            this.buttonSendCustomKey.Size = new System.Drawing.Size(117, 27);
+            this.buttonSendCustomKey.TabIndex = 29;
+            this.buttonSendCustomKey.Text = "Send Custom";
+            this.buttonSendCustomKey.UseVisualStyleBackColor = true;
+            this.buttonSendCustomKey.Click += new System.EventHandler(this.buttonSendCustomKey_Click);
+            // 
+            // labelCustom
+            // 
+            this.labelCustom.AutoSize = true;
+            this.labelCustom.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelCustom.Location = new System.Drawing.Point(9, 11);
+            this.labelCustom.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelCustom.Name = "labelCustom";
+            this.labelCustom.Size = new System.Drawing.Size(116, 16);
+            this.labelCustom.TabIndex = 30;
+            this.labelCustom.Text = "Use Custom Code";
             // 
             // checkBoxAlt
             // 
             this.checkBoxAlt.CheckboxSize = 40;
             this.checkBoxAlt.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxAlt.Location = new System.Drawing.Point(237, 283);
-            this.checkBoxAlt.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxAlt.Location = new System.Drawing.Point(158, 184);
             this.checkBoxAlt.Name = "checkBoxAlt";
-            this.checkBoxAlt.Size = new System.Drawing.Size(141, 86);
+            this.checkBoxAlt.Size = new System.Drawing.Size(94, 56);
             this.checkBoxAlt.TabIndex = 16;
             this.checkBoxAlt.Text = "Alt";
             this.checkBoxAlt.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -376,10 +419,9 @@
             this.chkAlwaysOnTop.Checked = true;
             this.chkAlwaysOnTop.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkAlwaysOnTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkAlwaysOnTop.Location = new System.Drawing.Point(38, 600);
-            this.chkAlwaysOnTop.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.chkAlwaysOnTop.Location = new System.Drawing.Point(12, 400);
             this.chkAlwaysOnTop.Name = "chkAlwaysOnTop";
-            this.chkAlwaysOnTop.Size = new System.Drawing.Size(290, 38);
+            this.chkAlwaysOnTop.Size = new System.Drawing.Size(193, 25);
             this.chkAlwaysOnTop.TabIndex = 0;
             this.chkAlwaysOnTop.Text = "Keep Window On Top";
             this.chkAlwaysOnTop.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -390,10 +432,9 @@
             // 
             this.checkBoxShift.CheckboxSize = 40;
             this.checkBoxShift.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxShift.Location = new System.Drawing.Point(430, 283);
-            this.checkBoxShift.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxShift.Location = new System.Drawing.Point(287, 184);
             this.checkBoxShift.Name = "checkBoxShift";
-            this.checkBoxShift.Size = new System.Drawing.Size(170, 86);
+            this.checkBoxShift.Size = new System.Drawing.Size(113, 56);
             this.checkBoxShift.TabIndex = 13;
             this.checkBoxShift.Text = "Shift";
             this.checkBoxShift.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -402,79 +443,56 @@
             // 
             this.checkBoxCtrl.CheckboxSize = 40;
             this.checkBoxCtrl.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxCtrl.Location = new System.Drawing.Point(38, 283);
-            this.checkBoxCtrl.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxCtrl.Location = new System.Drawing.Point(25, 184);
             this.checkBoxCtrl.Name = "checkBoxCtrl";
-            this.checkBoxCtrl.Size = new System.Drawing.Size(153, 86);
+            this.checkBoxCtrl.Size = new System.Drawing.Size(102, 56);
             this.checkBoxCtrl.TabIndex = 12;
             this.checkBoxCtrl.Text = "Ctrl";
             this.checkBoxCtrl.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // textBoxCustomCode
+            // panelCustomOutline
             // 
-            this.textBoxCustomCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.textBoxCustomCode.Location = new System.Drawing.Point(477, 453);
-            this.textBoxCustomCode.Name = "textBoxCustomCode";
-            this.textBoxCustomCode.Size = new System.Drawing.Size(146, 30);
-            this.textBoxCustomCode.TabIndex = 25;
-            this.textBoxCustomCode.TextChanged += new System.EventHandler(this.textBoxCustomCode_TextChanged);
+            this.panelCustomOutline.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panelCustomOutline.Controls.Add(this.infoCustomCode);
+            this.panelCustomOutline.Controls.Add(this.labelHexPrefix);
+            this.panelCustomOutline.Controls.Add(this.labelCustom);
+            this.panelCustomOutline.Controls.Add(this.radioButtonVK);
+            this.panelCustomOutline.Controls.Add(this.buttonSendCustomKey);
+            this.panelCustomOutline.Controls.Add(this.textBoxCustomCode);
+            this.panelCustomOutline.Controls.Add(this.radioButtonSC);
+            this.panelCustomOutline.Location = new System.Drawing.Point(277, 255);
+            this.panelCustomOutline.Margin = new System.Windows.Forms.Padding(0);
+            this.panelCustomOutline.Name = "panelCustomOutline";
+            this.panelCustomOutline.Size = new System.Drawing.Size(137, 144);
+            this.panelCustomOutline.TabIndex = 31;
             // 
-            // radioButtonVK
+            // labelHexPrefix
             // 
-            this.radioButtonVK.AutoSize = true;
-            this.radioButtonVK.Location = new System.Drawing.Point(502, 393);
-            this.radioButtonVK.Name = "radioButtonVK";
-            this.radioButtonVK.Size = new System.Drawing.Size(97, 24);
-            this.radioButtonVK.TabIndex = 26;
-            this.radioButtonVK.TabStop = true;
-            this.radioButtonVK.Text = "VK Code";
-            this.radioButtonVK.UseVisualStyleBackColor = true;
-            this.radioButtonVK.CheckedChanged += new System.EventHandler(this.radioButtonVK_CheckedChanged);
+            this.labelHexPrefix.AutoSize = true;
+            this.labelHexPrefix.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelHexPrefix.Location = new System.Drawing.Point(9, 79);
+            this.labelHexPrefix.Name = "labelHexPrefix";
+            this.labelHexPrefix.Size = new System.Drawing.Size(27, 19);
+            this.labelHexPrefix.TabIndex = 31;
+            this.labelHexPrefix.Text = "0x";
             // 
-            // radioButtonSC
+            // infoCustomCode
             // 
-            this.radioButtonSC.AutoSize = true;
-            this.radioButtonSC.Location = new System.Drawing.Point(502, 423);
-            this.radioButtonSC.Name = "radioButtonSC";
-            this.radioButtonSC.Size = new System.Drawing.Size(98, 24);
-            this.radioButtonSC.TabIndex = 27;
-            this.radioButtonSC.TabStop = true;
-            this.radioButtonSC.Text = "SC Code";
-            this.radioButtonSC.UseVisualStyleBackColor = true;
-            this.radioButtonSC.CheckedChanged += new System.EventHandler(this.radioButtonSC_CheckedChanged);
-            // 
-            // buttonSendCustomKey
-            // 
-            this.buttonSendCustomKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.buttonSendCustomKey.Location = new System.Drawing.Point(502, 489);
-            this.buttonSendCustomKey.Name = "buttonSendCustomKey";
-            this.buttonSendCustomKey.Size = new System.Drawing.Size(81, 42);
-            this.buttonSendCustomKey.TabIndex = 29;
-            this.buttonSendCustomKey.Text = "Send";
-            this.buttonSendCustomKey.UseVisualStyleBackColor = true;
-            this.buttonSendCustomKey.Click += new System.EventHandler(this.buttonSendCustomKey_Click);
-            // 
-            // labelCustom
-            // 
-            this.labelCustom.AutoSize = true;
-            this.labelCustom.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelCustom.Location = new System.Drawing.Point(385, 458);
-            this.labelCustom.Name = "labelCustom";
-            this.labelCustom.Size = new System.Drawing.Size(86, 25);
-            this.labelCustom.TabIndex = 30;
-            this.labelCustom.Text = "Custom:";
+            this.infoCustomCode.Image = ((System.Drawing.Image)(resources.GetObject("infoCustomCode.Image")));
+            this.infoCustomCode.Location = new System.Drawing.Point(111, 81);
+            this.infoCustomCode.Name = "infoCustomCode";
+            this.infoCustomCode.Size = new System.Drawing.Size(16, 16);
+            this.infoCustomCode.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.infoCustomCode.TabIndex = 32;
+            this.infoCustomCode.TabStop = false;
+            this.toolTip1.SetToolTip(this.infoCustomCode, resources.GetString("infoCustomCode.ToolTip"));
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(640, 698);
-            this.Controls.Add(this.labelCustom);
-            this.Controls.Add(this.buttonSendCustomKey);
-            this.Controls.Add(this.radioButtonSC);
-            this.Controls.Add(this.radioButtonVK);
-            this.Controls.Add(this.textBoxCustomCode);
-            this.Controls.Add(this.pictureBox1);
+            this.ClientSize = new System.Drawing.Size(427, 481);
+            this.Controls.Add(this.infoKeypressMethod);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.labelNudDuration);
@@ -500,16 +518,19 @@
             this.Controls.Add(this.btnF22);
             this.Controls.Add(this.btnF23);
             this.Controls.Add(this.btnF24);
+            this.Controls.Add(this.panelCustomOutline);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "MainForm";
             this.Text = "F-Key Sender";
             ((System.ComponentModel.ISupportInitialize)(this.nudDelay)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudDuration)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.infoKeypressMethod)).EndInit();
+            this.panelCustomOutline.ResumeLayout(false);
+            this.panelCustomOutline.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.infoCustomCode)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -544,11 +565,14 @@
         private System.Windows.Forms.ToolStripStatusLabel labelToolstripStatus;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox infoKeypressMethod;
         private System.Windows.Forms.TextBox textBoxCustomCode;
         private System.Windows.Forms.RadioButton radioButtonVK;
         private System.Windows.Forms.RadioButton radioButtonSC;
         private System.Windows.Forms.Button buttonSendCustomKey;
         private System.Windows.Forms.Label labelCustom;
+        private System.Windows.Forms.Panel panelCustomOutline;
+        private System.Windows.Forms.Label labelHexPrefix;
+        private System.Windows.Forms.PictureBox infoCustomCode;
     }
 }
