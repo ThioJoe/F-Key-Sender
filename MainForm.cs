@@ -100,7 +100,21 @@ namespace F_Key_Sender
 
         private async Task SendKey_keybd_eventAsync(string key, bool ctrl, bool shift, bool alt, bool customVK, bool customSC, CancellationToken ct)
         {
-            byte virtualKeyCode = BitConverter.GetBytes(keyCodes[key].vk)[0];
+            byte virtualKeyCode = 0;
+            if (customVK)
+            {
+                virtualKeyCode = BitConverter.GetBytes(StringToUShort(key))[0];
+            }
+            else if (customSC)
+            {
+                // Display error because this method doesn't support scan codes
+                MessageBox.Show("keybd_event does not support scan codes. Please use SendInput instead.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            else
+            {
+                virtualKeyCode = BitConverter.GetBytes(keyCodes[key].vk)[0];
+            }
 
             await Task.Run(async () =>
             {
