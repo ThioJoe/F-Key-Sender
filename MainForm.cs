@@ -497,22 +497,55 @@ namespace F_Key_Sender
 
         private void buttonSendCustomKey_Click(object sender, EventArgs e)
         {
+            string inputString = textBoxCustomCode.Text;
+
+            // If it's empty then display error
+            if (string.IsNullOrEmpty(inputString))
+            {
+                MessageBox.Show("Please enter a custom key code.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // If neither radio buttons are checked then display error
+            if (!radioButtonVK.Checked && !radioButtonSC.Checked)
+            {
+                MessageBox.Show("To send a custom key, select whether to use a virtual key code or a scan code.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Check if the input starts with "0x" and remove it if true
+            if (inputString.StartsWith("0x"))
+            {
+                inputString = inputString.Substring(2);
+            }
+
+            // If it contains any non-hexadecimal characters except a space or starting with 0x then display error
+            if (!System.Text.RegularExpressions.Regex.IsMatch(inputString, @"^[0-9A-Fa-f\s]+$"))
+            {
+                MessageBox.Show("Please enter a valid hexadecimal key code.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+
             if (radioButtonVK.Checked)
             {
-                SendKeyCombo(textBoxCustomCode.Text, customVK:true, customSC:false);
+                SendKeyCombo(inputString, customVK:true, customSC:false);
             }
             else if (radioButtonSC.Checked)
             {
-                SendKeyCombo(textBoxCustomCode.Text, customVK: false, customSC:true);
+                SendKeyCombo(inputString, customVK: false, customSC:true);
             }
         }
 
         // Convert string to ushort for both VK and SC
         private ushort StringToUShort(string input)
         {
-            // Strip off 0x if it's there, remove any spaces, and convert to ushort
-            return ushort.Parse(input.Replace("0x", "").Replace(" ", ""), System.Globalization.NumberStyles.HexNumber);
+            
+
+            // Remove any spaces and convert to ushort
+            return ushort.Parse(input.Replace(" ", ""), System.Globalization.NumberStyles.HexNumber);
         }
+
     }
 
 

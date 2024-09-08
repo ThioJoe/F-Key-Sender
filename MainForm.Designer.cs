@@ -62,6 +62,7 @@
             this.radioButtonVK = new System.Windows.Forms.RadioButton();
             this.radioButtonSC = new System.Windows.Forms.RadioButton();
             this.buttonSendCustomKey = new System.Windows.Forms.Button();
+            this.labelCustom = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nudDelay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudDuration)).BeginInit();
             this.statusStrip1.SuspendLayout();
@@ -411,16 +412,17 @@
             // 
             // textBoxCustomCode
             // 
+            this.textBoxCustomCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.textBoxCustomCode.Location = new System.Drawing.Point(477, 453);
             this.textBoxCustomCode.Name = "textBoxCustomCode";
-            this.textBoxCustomCode.Size = new System.Drawing.Size(146, 26);
+            this.textBoxCustomCode.Size = new System.Drawing.Size(146, 30);
             this.textBoxCustomCode.TabIndex = 25;
             this.textBoxCustomCode.TextChanged += new System.EventHandler(this.textBoxCustomCode_TextChanged);
             // 
             // radioButtonVK
             // 
             this.radioButtonVK.AutoSize = true;
-            this.radioButtonVK.Location = new System.Drawing.Point(488, 393);
+            this.radioButtonVK.Location = new System.Drawing.Point(502, 393);
             this.radioButtonVK.Name = "radioButtonVK";
             this.radioButtonVK.Size = new System.Drawing.Size(97, 24);
             this.radioButtonVK.TabIndex = 26;
@@ -432,7 +434,7 @@
             // radioButtonSC
             // 
             this.radioButtonSC.AutoSize = true;
-            this.radioButtonSC.Location = new System.Drawing.Point(488, 423);
+            this.radioButtonSC.Location = new System.Drawing.Point(502, 423);
             this.radioButtonSC.Name = "radioButtonSC";
             this.radioButtonSC.Size = new System.Drawing.Size(98, 24);
             this.radioButtonSC.TabIndex = 27;
@@ -443,7 +445,8 @@
             // 
             // buttonSendCustomKey
             // 
-            this.buttonSendCustomKey.Location = new System.Drawing.Point(505, 485);
+            this.buttonSendCustomKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.buttonSendCustomKey.Location = new System.Drawing.Point(502, 489);
             this.buttonSendCustomKey.Name = "buttonSendCustomKey";
             this.buttonSendCustomKey.Size = new System.Drawing.Size(81, 42);
             this.buttonSendCustomKey.TabIndex = 29;
@@ -451,11 +454,22 @@
             this.buttonSendCustomKey.UseVisualStyleBackColor = true;
             this.buttonSendCustomKey.Click += new System.EventHandler(this.buttonSendCustomKey_Click);
             // 
+            // labelCustom
+            // 
+            this.labelCustom.AutoSize = true;
+            this.labelCustom.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelCustom.Location = new System.Drawing.Point(385, 458);
+            this.labelCustom.Name = "labelCustom";
+            this.labelCustom.Size = new System.Drawing.Size(86, 25);
+            this.labelCustom.TabIndex = 30;
+            this.labelCustom.Text = "Custom:";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(640, 698);
+            this.Controls.Add(this.labelCustom);
             this.Controls.Add(this.buttonSendCustomKey);
             this.Controls.Add(this.radioButtonSC);
             this.Controls.Add(this.radioButtonVK);
@@ -535,5 +549,6 @@
         private System.Windows.Forms.RadioButton radioButtonVK;
         private System.Windows.Forms.RadioButton radioButtonSC;
         private System.Windows.Forms.Button buttonSendCustomKey;
+        private System.Windows.Forms.Label labelCustom;
     }
 }
