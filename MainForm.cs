@@ -37,11 +37,12 @@ namespace F_Key_Sender
             {"X", (0x58, 45)}
         };
 
-        // Flags for keybd_event
+        // Flags for KEYBDINPUT structure used in API calls
         const uint INPUT_KEYBOARD = 1;
         const uint KEYEVENTF_KEYDOWN = 0x0000;
         const uint KEYEVENTF_KEYUP = 0x0002;
         const uint KEYEVENTF_SCANCODE = 0x0008;
+        const uint KEYEVENTF_EXTENDEDKEY = 0x0001;
 
         private readonly Stopwatch stopwatch = new Stopwatch();
 
@@ -100,10 +101,14 @@ namespace F_Key_Sender
 
         private async Task SendKey_keybd_eventAsync(string key, bool ctrl, bool shift, bool alt, bool customVK, bool customSC, CancellationToken ct)
         {
+            bool isExtended = false;
+            ushort keyHex = 0;
             byte virtualKeyCode = 0;
+
             if (customVK)
             {
-                virtualKeyCode = BitConverter.GetBytes(StringToUShort(key))[0];
+                (keyHex, isExtended) = StringToUShort(key);
+                virtualKeyCode = BitConverter.GetBytes(keyHex)[0];
             }
             else if (customSC)
             {
@@ -227,26 +232,42 @@ namespace F_Key_Sender
         // Bypassing SendKeys and directly using SendInput due to limitations of F17 through F24 in .NET's SendKeys
         private async Task SendKey_Method_SendInputAsync(string key, bool ctrl, bool shift, bool alt, bool customVK, bool customSC,CancellationToken ct)
         {
+            ushort keyHex = 0;
+            bool isExtended = false;
+
             if (keyCodes.TryGetValue(key.ToUpper(), out var codes))
             {
                 // If the key exists in keyCodes, use its vk and scan codes
             }
             else if (customVK)
             {
+                (keyHex, isExtended) = StringToUShort(key);
                 // If customVK is true, create the codes dictionary with a custom virtual key code
-                codes = (StringToUShort(key), 0); // Only provide vk, set scan code to 0
+                codes = (keyHex, 0); // Only provide vk, set scan code to 0
             }
             else if (customSC)
             {
+                (keyHex, isExtended) = StringToUShort(key);
                 // If customSC is true, create the codes dictionary with a custom scan code
-                codes = (0, StringToUShort(key)); // Only provide scan code, set vk to 0
+                codes = (0, keyHex); // Only provide scan code, set vk to 0
+
+                // DEBUG display message with the scan code
+                //MessageBox.Show($"Scan Code: {codes.scan}", "Scan Code", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             await Task.Run(async () =>
             {
                 // Helper function to create a single input
-                INPUT CreateInput(ushort vk, ushort scan, bool isKeyUp = false)
+                INPUT CreateInput(ushort vk, ushort scan, bool isKeyUp = false, bool extended = false)
                 {
+                    uint dwFlags = 0;
+
+                    if (isKeyUp)
+                        dwFlags |= KEYEVENTF_KEYUP;
+
+                    if (extended)
+                        dwFlags |= KEYEVENTF_EXTENDEDKEY;
+
                     return new INPUT
                     {
                         type = INPUT_KEYBOARD,
@@ -256,7 +277,7 @@ namespace F_Key_Sender
                             {
                                 wVk = vk,
                                 wScan = scan,
-                                dwFlags = isKeyUp ? KEYEVENTF_KEYUP : 0,
+                                dwFlags = dwFlags,
                                 time = (uint)stopwatch.ElapsedMilliseconds,
                                 dwExtraInfo = IntPtr.Zero
                             }
@@ -282,18 +303,18 @@ namespace F_Key_Sender
                 List<INPUT> keyUpInputs = new List<INPUT>();
 
                 // Add key down events for modifiers
-                if (ctrl) keyDownInputs.Add(CreateInput(keyCodes["LCTRL"].vk, keyCodes["LCTRL"].scan));
-                if (shift) keyDownInputs.Add(CreateInput(keyCodes["LSHIFT"].vk, keyCodes["LSHIFT"].scan));
-                if (alt) keyDownInputs.Add(CreateInput(keyCodes["LALT"].vk, keyCodes["LALT"].scan));
+                if (ctrl) keyDownInputs.Add(CreateInput(vk:keyCodes["LCTRL"].vk, scan:keyCodes["LCTRL"].scan, isKeyUp:false, extended:isExtended));
+                if (shift) keyDownInputs.Add(CreateInput(vk:keyCodes["LSHIFT"].vk, scan:keyCodes["LSHIFT"].scan, isKeyUp:false, extended:isExtended));
+                if (alt) keyDownInputs.Add(CreateInput(vk:keyCodes["LALT"].vk, scan:keyCodes["LALT"].scan, isKeyUp:false, extended:isExtended));
 
                 // Add key down event for the main key
-                keyDownInputs.Add(CreateInput(codes.vk, codes.scan));
+                keyDownInputs.Add(CreateInput(vk:codes.vk, scan:codes.scan, isKeyUp:false, extended:isExtended));
 
                 // Add key up events in reverse order
-                keyUpInputs.Add(CreateInput(codes.vk, codes.scan, true));
-                if (alt) keyUpInputs.Add(CreateInput(keyCodes["LALT"].vk, keyCodes["LALT"].scan, true));
-                if (shift) keyUpInputs.Add(CreateInput(keyCodes["LSHIFT"].vk, keyCodes["LSHIFT"].scan, true));
-                if (ctrl) keyUpInputs.Add(CreateInput(keyCodes["LCTRL"].vk, keyCodes["LCTRL"].scan, true));
+                keyUpInputs.Add(CreateInput(vk:codes.vk, scan:codes.scan, isKeyUp:true, extended:isExtended));
+                if (alt) keyUpInputs.Add(CreateInput(vk:keyCodes["LALT"].vk, scan: keyCodes["LALT"].scan, isKeyUp:true, extended:isExtended));
+                if (shift) keyUpInputs.Add(CreateInput(vk:keyCodes["LSHIFT"].vk, scan:keyCodes["LSHIFT"].scan, isKeyUp:true, extended:isExtended));
+                if (ctrl) keyUpInputs.Add(CreateInput(vk:keyCodes["LCTRL"].vk, scan:keyCodes["LCTRL"].scan, isKeyUp:true, extended:isExtended));
 
                 try
                 {
@@ -538,12 +559,26 @@ namespace F_Key_Sender
         }
 
         // Convert string to ushort for both VK and SC
-        private ushort StringToUShort(string input)
-        {
-            
+        private (ushort, bool) StringToUShort(string input) { 
+            // Determine if it's an extended key starting with E0
+            input = input.ToUpper();
+            bool isExtended = false;
 
-            // Remove any spaces and convert to ushort
-            return ushort.Parse(input.Replace(" ", ""), System.Globalization.NumberStyles.HexNumber);
+            if (input.StartsWith("E0") && input.Length > 2)
+            {
+                isExtended = true;
+            }
+
+            if (isExtended)
+            {
+                // Remove E0 and convert to ushort
+                return (ushort.Parse(input.Substring(2), System.Globalization.NumberStyles.HexNumber), true);
+            }
+            else
+            {
+                // Convert to ushort
+                return (ushort.Parse(input, System.Globalization.NumberStyles.HexNumber), false);
+            }
         }
 
     }
