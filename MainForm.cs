@@ -356,8 +356,8 @@ namespace F_Key_Sender
                 // -------- Add Key Down and Up Events For Main Key --------               
                 if (!customUnicode)
                 {
-                    keyDownInputs.Add(CreateInput(vk: codes.vk, scan: codes.scan, isKeyUp: false, extended: isExtended, scanFlag: scanOnly, unicodeFlag: customUnicode));
-                    keyUpInputs.Add(CreateInput(vk: codes.vk, scan: codes.scan, isKeyUp: true, extended: isExtended, scanFlag: scanOnly, unicodeFlag: customUnicode));
+                    keyDownInputs.Add(CreateInput(vk: codes.vk, scan: codes.scan, isKeyUp: false, extended: isExtended, scanFlag: scanOnly, unicodeFlag: false));
+                    keyUpInputs.Add(CreateInput(vk: codes.vk, scan: codes.scan, isKeyUp: true, extended: isExtended, scanFlag: scanOnly, unicodeFlag: false));
                 }
                 // If customUnicode is true, use loops to add as many surrogate pairs as necessary to the key down and key up lists
                 else
@@ -585,7 +585,30 @@ namespace F_Key_Sender
 
         private void textBoxCustomCode_TextChanged(object sender, EventArgs e)
         {
+            // If the text box is empty, disable the send button
+            if (string.IsNullOrEmpty(textBoxCustomCode.Text))
+            {
+                buttonSendCustomKey.Enabled = false;
+            }
+            else
+            {
+                buttonSendCustomKey.Enabled = true;
+            }
 
+            // Clean up formatting - Set to upper case, remove spaces, and remove 0x or U+
+            string inputString = textBoxCustomCode.Text;
+            inputString = inputString.ToUpper().Replace(" ", "");
+            if (inputString.StartsWith("0X"))
+            {
+                inputString = inputString.Substring(2);
+            }
+            else if (inputString.StartsWith("U+"))
+            {
+                inputString = inputString.Substring(2);
+            }
+
+            // Update the text box with the cleaned up string
+            textBoxCustomCode.Text = inputString;
         }
 
         private void updateHexLabel()
