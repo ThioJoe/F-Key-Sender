@@ -255,6 +255,7 @@ namespace F_Key_Sender
             ushort keyHex = 0;
             bool isExtended = false;
             bool scanOnly = false; // Set to true if for the VK code to be ignored (Note, if the VK value needs to be explicitly 0, do not use this)
+            ushort[] unicodeCodesArray = null; // Array to hold the UTF-16 code points if customUnicode is true. May contain one ushort, or multiple if a surrogate pair
 
             // Here the 'codes dictionary is created either way, but values are only assigned if the key exists in keyCodes
             // Otherwise the values will be set later based on the custom flags
@@ -268,8 +269,8 @@ namespace F_Key_Sender
             if (customUnicode)
             {
                 // If customUnicode is true, we use the UTF-16 code point of the character as the scan code
-                (keyHex, _) = StringToUShort(key); // Discard the isExtended value, it is not used for unicode
-                codes = (0, keyHex); // Only provide scan code, set vk to 0
+                // If it's a surrogate pair, we need to send both codes separately
+                unicodeCodesArray = UnicodeToUShortArray(key);
             }
             else if (customVK)
             {
@@ -342,31 +343,44 @@ namespace F_Key_Sender
 
                 ct.ThrowIfCancellationRequested();
 
-                // Create lists to hold key down and key up inputs
+                // Create lists to hold key down and key up inputs before sending all together
                 List<INPUT> keyDownInputs = new List<INPUT>();
                 List<INPUT> keyUpInputs = new List<INPUT>();
 
-                // -------- Add Key Down --------
-
-                // Add key down events for modifiers
+                // -------- Add Key Down For Modifiers --------
                 if (ctrl) keyDownInputs.Add(CreateInput(vk:keyCodes["LCTRL"].vk, scan:keyCodes["LCTRL"].scan, isKeyUp:false, extended:false));
                 if (shift) keyDownInputs.Add(CreateInput(vk:keyCodes["LSHIFT"].vk, scan:keyCodes["LSHIFT"].scan, isKeyUp:false, extended:false));
                 if (alt) keyDownInputs.Add(CreateInput(vk:keyCodes["LALT"].vk, scan:keyCodes["LALT"].scan, isKeyUp:false, extended:false));
+                //---------------------------------------------
 
-                // Add key down event for the main key
-                keyDownInputs.Add(CreateInput(vk:codes.vk, scan:codes.scan, isKeyUp:false, extended:isExtended, scanFlag:scanOnly, unicodeFlag:customUnicode));
+                // -------- Add Key Down and Up Events For Main Key --------               
+                if (!customUnicode)
+                {
+                    keyDownInputs.Add(CreateInput(vk: codes.vk, scan: codes.scan, isKeyUp: false, extended: isExtended, scanFlag: scanOnly, unicodeFlag: customUnicode));
+                    keyUpInputs.Add(CreateInput(vk: codes.vk, scan: codes.scan, isKeyUp: true, extended: isExtended, scanFlag: scanOnly, unicodeFlag: customUnicode));
+                }
+                // If customUnicode is true, use loops to add as many surrogate pairs as necessary to the key down and key up lists
+                else
+                {
+                    // Key Down
+                    foreach (ushort unicodeCode in unicodeCodesArray)
+                    {
+                        keyDownInputs.Add(CreateInput(vk: 0, scan: unicodeCode, isKeyUp: false, extended: false, scanFlag: false, unicodeFlag: true));
+                        
+                    }
+                    // Key Up
+                    foreach (ushort unicodeCode in unicodeCodesArray)
+                    {
+                        keyUpInputs.Add(CreateInput(vk: 0, scan: unicodeCode, isKeyUp: true, extended: false, scanFlag: false, unicodeFlag: true));
+                    }
+                }
+                //-------------------------------------------------
 
-                // -------- Add Key Up --------
-
-                // Add key up event for the main key
-                keyUpInputs.Add(CreateInput(vk:codes.vk, scan:codes.scan, isKeyUp:true, extended:isExtended, scanFlag: scanOnly, unicodeFlag: customUnicode));
-
-                // Add key up events for modifiers
+                // -------- Add Key Up For Modifiers --------
                 if (alt) keyUpInputs.Add(CreateInput(vk:keyCodes["LALT"].vk, scan: keyCodes["LALT"].scan, isKeyUp:true, extended:false));
                 if (shift) keyUpInputs.Add(CreateInput(vk:keyCodes["LSHIFT"].vk, scan:keyCodes["LSHIFT"].scan, isKeyUp:true, extended:false));
                 if (ctrl) keyUpInputs.Add(CreateInput(vk:keyCodes["LCTRL"].vk, scan:keyCodes["LCTRL"].scan, isKeyUp:true, extended:false));
-
-                //--------------------------------
+                //------------------------------------------
 
                 try
                 {
@@ -673,6 +687,23 @@ namespace F_Key_Sender
                 // Convert to ushort
                 return (ushort.Parse(input, System.Globalization.NumberStyles.HexNumber), false);
             }
+        }
+
+        // Function for Unicode specifically, handles both UTF-16 and UTF-32 code points to return surrogate pairs if necessary
+        // Returns array of ushort values
+        private ushort[] UnicodeToUShortArray(string input)
+        {
+            // Parse the hexadecimal string to an integer
+            if (!int.TryParse(input, System.Globalization.NumberStyles.HexNumber, null, out int codePoint))
+            {
+                throw new ArgumentException("Invalid Unicode code point");
+            }
+
+            // Convert the code point to UTF-16
+            string utf16String = char.ConvertFromUtf32(codePoint);
+
+            // Convert each UTF-16 character to ushort
+            return utf16String.Select(c => (ushort)c).ToArray();
         }
 
         // Display message box with info about using custom key codes
