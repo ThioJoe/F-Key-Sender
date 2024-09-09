@@ -67,6 +67,7 @@
             this.buttonCustomInfo = new System.Windows.Forms.Button();
             this.radioButtonUnicode = new System.Windows.Forms.RadioButton();
             this.labelHexPrefix = new System.Windows.Forms.Label();
+            this.labelVersion = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nudDelay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudDuration)).BeginInit();
             this.statusStrip1.SuspendLayout();
@@ -502,6 +503,16 @@
             this.labelHexPrefix.TabIndex = 31;
             this.labelHexPrefix.Text = "0x";
             // 
+            // labelVersion
+            // 
+            this.labelVersion.AutoSize = true;
+            this.labelVersion.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.labelVersion.Location = new System.Drawing.Point(345, 447);
+            this.labelVersion.Name = "labelVersion";
+            this.labelVersion.Size = new System.Drawing.Size(45, 13);
+            this.labelVersion.TabIndex = 32;
+            this.labelVersion.Text = "Version:";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -534,6 +545,7 @@
             this.Controls.Add(this.btnF23);
             this.Controls.Add(this.btnF24);
             this.Controls.Add(this.panelCustomOutline);
+            this.Controls.Add(this.labelVersion);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
@@ -589,5 +601,6 @@
         private System.Windows.Forms.Label labelHexPrefix;
         private System.Windows.Forms.RadioButton radioButtonUnicode;
         private System.Windows.Forms.Button buttonCustomInfo;
+        private System.Windows.Forms.Label labelVersion;
     }
 }

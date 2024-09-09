@@ -5,6 +5,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -15,6 +16,7 @@ namespace F_Key_Sender
 {
     public partial class MainForm : Form
     {
+        const string VERSION = "1.1.0";
 
         // Dictionary to store virtual key codes and scan codes. Will want to use wscan codes for SendInput
         private static readonly Dictionary<string, (ushort vk, ushort scan)> keyCodes = new Dictionary<string, (ushort, ushort)>
@@ -57,6 +59,11 @@ namespace F_Key_Sender
             this.TopMost = true;
             stopwatch.Start();
             dropdownMethod.SelectedIndex = 0;
+
+            VerifyAssemblyVersion();
+
+            // Set Version Label
+            labelVersion.Text = $"Version: {VERSION}";
         }
 
         // Using WaitHandle instead of Thread.Sleep to avoid wasting system resources and also more accurate
@@ -1005,6 +1012,43 @@ namespace F_Key_Sender
                 MessageBoxButtons.OK,
                 MessageBoxIcon.None
             );
+        }
+
+        // If in debug mode and the assembly version does not match the file version, display a warning message
+        private void VerifyAssemblyVersion()
+        {
+#if DEBUG
+            var assembly = Assembly.GetExecutingAssembly();
+            var assemblyVersion = assembly.GetName().Version.ToString();
+            var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
+            var fileVersion = new Version(fileVersionInfo.FileVersion).ToString();
+
+            // Ignore the last digit of the version number if it's 0 and the file version doesn't use it by counting periods in the file version
+            if (assemblyVersion.EndsWith(".0") && VERSION.Count(c => c == '.') < 3)
+            {
+                assemblyVersion = assemblyVersion.Substring(0, assemblyVersion.Length - 2);
+            }
+            if (fileVersion.EndsWith(".0") && VERSION.Count(c => c == '.') < 3)
+            {
+                fileVersion = fileVersion.Substring(0, fileVersion.Length - 2);
+            }
+
+            if (assemblyVersion != VERSION || fileVersion != VERSION)
+            {
+                string warningMessage = $"WARNING: Version mismatch detected!\n" +
+                                        $"Expected version: {VERSION}\n" +
+                                        $"Assembly version: {assemblyVersion}\n" +
+                                        $"File version: {fileVersion}";
+
+                Debug.WriteLine(warningMessage);
+                MessageBox.Show(warningMessage, "Version Mismatch",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            {
+                Debug.WriteLine($"Version check passed. Current version: {VERSION}");
+            }
+#endif
         }
     }
 }
