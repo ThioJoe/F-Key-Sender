@@ -904,7 +904,7 @@ namespace F_Key_Sender
                 }
 
                 // If any are 4 characters, add a leading zero to make all a consistant 5 characters
-                if (codePoint.Length == 4)
+                if (sanitizedCodepoint.Length == 4)
                 {
                     sanitizedCodepoint = "0" + sanitizedCodepoint;
                 }
@@ -982,7 +982,7 @@ namespace F_Key_Sender
                 "For Unicode:\n" +
                 "    This should be a 4 or 5 character codepoint. If sending\n" +
                 "     a glyph that uses a zero-width joiner like some emojis,\n" +
-                "     all codepoints must be 5 characters.\n\n" + 
+                "     all codepoints must be 5 characters or split by spaces or U+.\n\n" + 
 
                 "-------------------- Examples --------------------\n\n" +
 
@@ -999,7 +999,7 @@ namespace F_Key_Sender
                 "Unicode Zero-Width-Joiner Valid Examples:\n" +
                 "    1F468 0200D 1F33E  (Split by spaces)\n" +
                 "    1F4680200D1F33E    (Combined but all are 5 characters)\n" +
-                "    U+1F468 U+0200D U+1F33E  (Split by U+)"
+                "    U+2764 U+FE0F U+200D U+1F525  (Split by U+)"
                 ,
                 "Custom Key Code Info",
                 MessageBoxButtons.OK,
