@@ -46,6 +46,9 @@ namespace F_Key_Sender
         const uint KEYEVENTF_EXTENDEDKEY = 0x0001;
         const uint KEYEVENTF_UNICODE = 0x0004;
 
+        // UI Constants
+        const int statusBarHeightDefault = 22;
+
         private readonly Stopwatch stopwatch = new Stopwatch();
 
         public MainForm()
@@ -88,6 +91,7 @@ namespace F_Key_Sender
                 // Handle cancellation
                 labelToolstripStatus.Text = "Status: Ready (Operation Cancelled)";
                 labelToolstripStatus.ForeColor = Color.SaddleBrown;
+                statusStrip1.Height = statusBarHeightDefault;
             }
             finally
             {
@@ -148,6 +152,7 @@ namespace F_Key_Sender
                     All_Buttons_Disabler();
                     labelToolstripStatus.Text = "Status: Waiting Before Sending...";
                     labelToolstripStatus.ForeColor = Color.Purple;
+                    statusStrip1.Height = statusBarHeightDefault;
                     btnCancel.Visible = true;
                 });
 
@@ -171,6 +176,7 @@ namespace F_Key_Sender
                     {
                         labelToolstripStatus.Text = "Status: Holding Key...";
                         labelToolstripStatus.ForeColor = Color.Green;
+                        statusStrip1.Height = statusBarHeightDefault;
                     });
 
                     await Task.Delay((int)nudDuration.Value, ct);
@@ -193,6 +199,7 @@ namespace F_Key_Sender
                         All_Buttons_Enabler();
                         labelToolstripStatus.Text = "Status: Ready";
                         labelToolstripStatus.ForeColor = Color.Black;
+                        statusStrip1.Height = statusBarHeightDefault;
                         btnCancel.Visible = false;
                     });
                 }
@@ -256,6 +263,7 @@ namespace F_Key_Sender
             bool isExtended = false;
             bool scanOnly = false; // Set to true if for the VK code to be ignored (Note, if the VK value needs to be explicitly 0, do not use this)
             ushort[] unicodeCodesArray = null; // Array to hold the UTF-16 code points if customUnicode is true. May contain one ushort, or multiple if a surrogate pair
+            string warningStatus = ""; // Warning message to display in status bar if necessary
 
             // Here the 'codes dictionary is created either way, but values are only assigned if the key exists in keyCodes
             // Otherwise the values will be set later based on the custom flags
@@ -271,6 +279,12 @@ namespace F_Key_Sender
                 // If customUnicode is true, we use the UTF-16 code point of the character as the scan code
                 // If it's a surrogate pair, we need to send both codes separately
                 unicodeCodesArray = UnicodeToUShortArray(key);
+                if (CheckDuplicateUnicodeCodepoints(unicodeCodesArray))
+                {
+                    warningStatus = " + Warning: Duplicate Unicode Codepoints detected.\n" +
+                                    "                                           Only one of each can be sent at a time.";
+                }
+
             }
             else if (customVK)
             {
@@ -336,7 +350,9 @@ namespace F_Key_Sender
                     All_Buttons_Disabler();
                     labelToolstripStatus.Text = "Status: Waiting Before Sending...";
                     labelToolstripStatus.ForeColor = Color.Purple;
+                    statusStrip1.Height = statusBarHeightDefault;
                     btnCancel.Visible = true;
+                    
                 });
 
                 await Task.Delay((int)nudDelay.Value * 1000, ct);
@@ -393,6 +409,7 @@ namespace F_Key_Sender
                     {
                         labelToolstripStatus.Text = "Status: Holding Key...";
                         labelToolstripStatus.ForeColor = Color.Green;
+                        statusStrip1.Height = statusBarHeightDefault;
                     });
 
                     await Task.Delay((int)nudDuration.Value, ct);
@@ -408,9 +425,24 @@ namespace F_Key_Sender
                     this.Invoke((MethodInvoker)delegate
                     {
                         All_Buttons_Enabler();
-                        labelToolstripStatus.Text = "Status: Ready";
-                        labelToolstripStatus.ForeColor = Color.Black;
                         btnCancel.Visible = false;
+
+                        if (string.IsNullOrEmpty(warningStatus))
+                        {
+                            labelToolstripStatus.Text = "Status: Ready";
+                            labelToolstripStatus.ForeColor = Color.Black;
+                            // Reset height of toolstrip
+                            statusStrip1.Height = statusBarHeightDefault;
+                        }
+                        else
+                        {
+                            labelToolstripStatus.Text = "Status: Ready" + warningStatus;
+                            labelToolstripStatus.ForeColor = Color.DarkOrange;
+                            // Increase height of toolstrip to accommodate the warning message
+                            // Count number of newlines in the warning message to determine how much to increase the height
+                            int newLines = warningStatus.Count(c => c == '\n');
+                            statusStrip1.Height = (newLines+1) * statusBarHeightDefault;
+                        }
                     });
                 }
             }, ct);
@@ -561,6 +593,7 @@ namespace F_Key_Sender
                 _cts.Cancel();
                 labelToolstripStatus.Text = "Status: Cancelling...";
                 labelToolstripStatus.ForeColor = Color.Orange;
+                statusStrip1.Height = statusBarHeightDefault;
                 btnCancel.Enabled = false;
             }
         }
@@ -838,10 +871,12 @@ namespace F_Key_Sender
         {
             List<ushort> result = new List<ushort>();
 
+            int chunkSize = input.Length > 4 ? 5 : 4;
+
             // Process the input in chunks of 4 or 5 characters (4 for BMP, 5 for higher planes)
-            for (int i = 0; i < input.Length; i += input.Length > 4 ? 5 : 4)
+            for (int i = 0; i < input.Length; i += chunkSize)
             {
-                string codePointHex = input.Substring(i, Math.Min(input.Length > 4 ? 5 : 4, input.Length - i));
+                string codePointHex = input.Substring(i, Math.Min(chunkSize, input.Length - i));
 
                 // Parse the hexadecimal string to an integer
                 if (!int.TryParse(codePointHex, System.Globalization.NumberStyles.HexNumber, null, out int codePoint))
@@ -856,7 +891,23 @@ namespace F_Key_Sender
                 result.AddRange(utf16String.Select(c => (ushort)c));
             }
 
-            return result.ToArray();
+            ushort[] finalArray = result.ToArray();
+
+            return finalArray;
+        }
+
+        // Check if there are any duplicate Unicode code points in the array that are not zero-width joiners
+        // Since the the keydown events are sent together, if any are sent twice, it will not print it twice
+        private bool CheckDuplicateUnicodeCodepoints(ushort[] inputArray)
+        {
+            foreach (ushort codePoint in inputArray)
+            {
+                if (codePoint != 0x200D && inputArray.Count(c => c == codePoint) > 1)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         // Display message box with info about using custom key codes
@@ -879,7 +930,7 @@ namespace F_Key_Sender
                 "For Unicode:\n" +
                 "    This should be a 4 or 5 character codepoint. If sending\n" +
                 "     a glyph that uses a zero-width joiner like some emojis,\n" +
-                "     all codepoints must be 5 characters.\n\n" +
+                "     all codepoints must be 5 characters.\n\n" + 
 
                 "-------------------- Examples --------------------\n\n" +
 

@@ -382,7 +382,7 @@
             // buttonSendCustomKey
             // 
             this.buttonSendCustomKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.buttonSendCustomKey.Location = new System.Drawing.Point(9, 136);
+            this.buttonSendCustomKey.Location = new System.Drawing.Point(9, 132);
             this.buttonSendCustomKey.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonSendCustomKey.Name = "buttonSendCustomKey";
             this.buttonSendCustomKey.Size = new System.Drawing.Size(117, 27);
@@ -464,7 +464,7 @@
             this.panelCustomOutline.Location = new System.Drawing.Point(277, 255);
             this.panelCustomOutline.Margin = new System.Windows.Forms.Padding(0);
             this.panelCustomOutline.Name = "panelCustomOutline";
-            this.panelCustomOutline.Size = new System.Drawing.Size(137, 182);
+            this.panelCustomOutline.Size = new System.Drawing.Size(137, 175);
             this.panelCustomOutline.TabIndex = 31;
             // 
             // labelHexPrefix
