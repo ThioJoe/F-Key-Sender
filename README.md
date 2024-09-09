@@ -1,16 +1,22 @@
 # F13-F24 Key Sender Tool
  Send keystrokes for F13 to F24 keys via buttons, including with modifiers (Shift, Ctrl, Alt).
 
+ Also allows sending custom key codes.
+
 ## Features:
 - Selectable delay before keys are sent (to give you time to move focus to application you want to send the keystrokes to)
 - Selectable key hold duration
 - Choice between two virtual keypress methods:
   - `SendInput` (Default): Modern, more reliable method for simulating keystrokes. 
   - `keybd_event`: Older method for generating keyboard input in case SendInput doesn't work.
+- Send custom key codes in the form of Virtual Keys (VK), raw Scan Codes (SC), or even Unicode characters
+   - Support for multi-byte unicode emojis that use Zero-Width Joiners (ZWJ)
 - Release Exe signed with EV code signing certificate (No pop up from Windows about untrusted software)
 
 ## Screenshot:
-<img src="https://github.com/ThioJoe/F-Key-Sender/assets/12518330/167e6a9c-fdec-4e95-93ff-7bfa3555ad9f" width=50% height=50%>
+<p align="center">
+<img width="500" alt="F-Key Sender Window" src="https://github.com/user-attachments/assets/2a5d0596-1215-4c8d-b0a5-f343a946dce0">
+</p>
 
 ## Why?
 
