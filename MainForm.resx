@@ -143,32 +143,6 @@ keybd_event: Older method for generating keyboard input.
        privilege applications. Use only if SendInput doesn't work for your
        specific needs.</value>
   </data>
-  <data name="infoCustomCode.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        DAAACwwBP0AiyAAAANdJREFUOE+lk7ENwjAQRb0ALEGXCWgtpcgCLEQXiQoGgCId1JkACDOhSOFedLaO
-        4ERAiied/7/7ih3bee9dnueWtXAWWqFTqC8CXuxl1hVFYTkKnXIX9gp10E9CnOmTdHEVaNgJS9UsCwGP
-        nhsasyGgUmODYTgoVqOH3ioEZCrwqbYR0GGo08vZZATULIxpWSkpj4CaAIabgRl4KCmvYTYElAMzMLYF
-        KL8JeCop7y1gbAtTAXELU4fYKikvHuLs34gwdpG2itU+LlIw/rvKFIbfH9O85+zdC8b3LMIYY2EGAAAA
-        AElFTkSuQmCC
-</value>
-  </data>
-  <data name="infoCustomCode.ToolTip" xml:space="preserve">
-    <value>Allows you to specify a custom hex value to send as a
-Virtual Key (VK), Scan Code (SC), or Unicode Codepoint
-
-This should only be 1 byte (2 characters), except
-in the case of "extended" scan codes which
-are two bytes, starting with E0.
-
-Modifier checkboxes will still be applied.
-
-Valid Examples:
-  0x3B 
-  0xE05D
-  0x003B  (First 00 will be removed)
-  </value>
-  </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAkAMDAAAAEACACoDgAAlgAAACAgAAABAAgAqAgAAD4PAAAAAAAAAQAgAEXNAADmFwAAQEAAAAEA

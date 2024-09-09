@@ -589,23 +589,28 @@ namespace F_Key_Sender
             if (string.IsNullOrEmpty(textBoxCustomCode.Text))
             {
                 buttonSendCustomKey.Enabled = false;
+                // Return early to avoid further processing
+                return;
             }
             else
             {
                 buttonSendCustomKey.Enabled = true;
             }
 
-            // Clean up formatting - Set to upper case, remove spaces, and remove 0x or U+
-            string inputString = textBoxCustomCode.Text;
-            inputString = inputString.ToUpper().Replace(" ", "");
-            if (inputString.StartsWith("0X"))
+            // Set string to process
+            string inputString = textBoxCustomCode.Text.ToUpper();
+
+            // Clean up formatting for SC and VK codes
+            if (radioButtonVK.Checked || radioButtonSC.Checked)
             {
-                inputString = inputString.Substring(2);
+                // Clean up formatting - Set to upper case, and remove 0x or U+
+                if (inputString.StartsWith("0X"))
+                {
+                    inputString = inputString.Substring(2);
+                }
             }
-            else if (inputString.StartsWith("U+"))
-            {
-                inputString = inputString.Substring(2);
-            }
+
+            // Don't process Unicode codes yet, we might need the full string to more easily identify zero-width joiners
 
             // Update the text box with the cleaned up string
             textBoxCustomCode.Text = inputString;
@@ -658,13 +663,23 @@ namespace F_Key_Sender
             // Trim any leading or trailing whitespace
             inputString = inputString.Trim();
             // Check if the input starts with "0x" or "U+" and remove it if true
-            if (inputString.ToLower().StartsWith("0x"))
+            if (inputString.ToUpper().StartsWith("0X"))
             {
                 inputString = inputString.Substring(2);
             }
-            else if (inputString.ToLower().StartsWith("u+"))
+            else if (inputString.ToUpper().StartsWith("U+"))
             {
                 inputString = inputString.Substring(2);
+            }
+
+            // Special processing for unicode code points
+            if (radioButtonUnicode.Checked)
+            {
+                inputString = PrepareUnicodeString(inputString);
+                if (inputString == null)
+                {
+                    return;
+                }
             }
 
             // If it contains any non-hexadecimal characters except a space or starting with 0x U+ then display error
@@ -712,32 +727,149 @@ namespace F_Key_Sender
             }
         }
 
+        private string PrepareUnicodeString(string rawInput)
+        {
+            string input = rawInput.Trim();
+            string inputNoSpaces = input.Replace(" ", "");
+
+            // Replace multiple sequential spaces with a single space
+            input = System.Text.RegularExpressions.Regex.Replace(input, @"\s+", " ");
+
+            string finalString = null;
+            // If the input excluding spaces is 5 characters or less, remove the spaces and return
+            if (inputNoSpaces.Length <= 5)
+            {
+                return inputNoSpaces;
+            }
+            // Or if it's 6 characters and starts with a zero, remove the zero and return
+            else if (inputNoSpaces.Length == 6 && inputNoSpaces.StartsWith("0"))
+            {
+                return inputNoSpaces.Substring(1);
+            }
+
+            // If input is longer than 5 characters, we can assume it's a zero-width joiner, so we must find a way to split each glyph and convert each codepoint to 5 characters
+            // Check if "U+" is present, because the beginning would have already been stripped, so if it's still present we can use it to split the string
+            if (input.Contains("U+"))
+            {
+                // Split the string by "U+" and remove any empty entries
+                string[] codePoints = input.Split(new string[] { "U+" }, StringSplitOptions.RemoveEmptyEntries);
+
+                finalString = ParseEachPossibleCodepoint(codePoints);
+
+            }
+
+            // If U+ is not present or splitting on it failed, we can try to split on spaces
+            if (finalString == null && input.Contains(" "))
+            {
+                // Split the string by spaces and remove any empty entries
+                string[] codePoints = input.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                finalString = ParseEachPossibleCodepoint(codePoints);
+            }
+
+            // At this point if the string length is divisible by 5, we will assume it's valid and return it
+            if (finalString == null && input.Length % 5 == 0)
+            {
+                finalString = input;
+            }
+            // If it's divisible by 4, we will assume it's valid and add a leading zero to each codepoint before returning
+            else if (finalString == null && input.Length % 4 == 0)
+            {
+                List<string> fixedCodepoints = new List<string>();  // List to hold the reformatted code points
+
+                // Split the string into 4 character chunks
+                for (int i = 0; i < input.Length; i += 4)
+                {
+                    string codePoint = input.Substring(i, 4);
+                    // Add a leading zero to each codepoint
+                    fixedCodepoints.Add("0" + codePoint);
+                }
+
+                // Return the fixed code points as a single string no spaces
+                finalString = string.Join("", fixedCodepoints);
+            }
+
+
+            // If finalString is still null, display error
+            if (finalString == null)
+            {
+                MessageBox.Show("Could not parse Unicode codepoints. Click the (?) info button for details on valid formats.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+
+            return finalString;
+        }
+
+        private string ParseEachPossibleCodepoint(string[] codePoints)
+        {
+            List<string> fixedCodepoints = new List<string>();  // List to hold the reformatted code points
+
+            // Check if the code points are valid
+            foreach (string codePoint in codePoints)
+            {
+                string sanitizedCodepoint = codePoint.Trim();
+                // If it's 6 characters but starts with a zero, remove the zero
+                if (sanitizedCodepoint.Length == 6 && sanitizedCodepoint.StartsWith("0"))
+                {
+                    sanitizedCodepoint = sanitizedCodepoint.Substring(1);
+                }
+                else if (sanitizedCodepoint.Length != 4 && sanitizedCodepoint.Length != 5)
+                {
+                    return null;
+                }
+
+                // If any are 4 characters, add a leading zero to make all a consistant 5 characters
+                if (codePoint.Length == 4)
+                {
+                    sanitizedCodepoint = "0" + sanitizedCodepoint;
+                }
+
+                // Add the fixed code point to the fixedCodePoints list
+                fixedCodepoints.Add(sanitizedCodepoint);
+            }
+
+            // Return the fixed code points as a single string no spaces
+            return string.Join("", fixedCodepoints);
+        }
+
         // Function for Unicode specifically, handles both UTF-16 and UTF-32 code points to return surrogate pairs if necessary
         // Returns array of ushort values
         private ushort[] UnicodeToUShortArray(string input)
         {
-            // Parse the hexadecimal string to an integer
-            if (!int.TryParse(input, System.Globalization.NumberStyles.HexNumber, null, out int codePoint))
+            List<ushort> result = new List<ushort>();
+
+            // Process the input in chunks of 4 or 5 characters (4 for BMP, 5 for higher planes)
+            for (int i = 0; i < input.Length; i += input.Length > 4 ? 5 : 4)
             {
-                throw new ArgumentException("Invalid Unicode code point");
+                string codePointHex = input.Substring(i, Math.Min(input.Length > 4 ? 5 : 4, input.Length - i));
+
+                // Parse the hexadecimal string to an integer
+                if (!int.TryParse(codePointHex, System.Globalization.NumberStyles.HexNumber, null, out int codePoint))
+                {
+                    throw new ArgumentException($"Invalid Unicode code point: {codePointHex}");
+                }
+
+                // Convert the code point to UTF-16
+                string utf16String = char.ConvertFromUtf32(codePoint);
+
+                // Add each UTF-16 character to the result
+                result.AddRange(utf16String.Select(c => (ushort)c));
             }
 
-            // Convert the code point to UTF-16
-            string utf16String = char.ConvertFromUtf32(codePoint);
-
-            // Convert each UTF-16 character to ushort
-            return utf16String.Select(c => (ushort)c).ToArray();
+            return result.ToArray();
         }
 
         // Display message box with info about using custom key codes
         private void buttonCustomInfo_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(
-                " ----- Advanced Optional Custom Codes -----\n\n" +
+            _ = MessageBox.Show(
+                "-------- Advanced Optional Custom Codes --------\n\n" +
                 "Allows you to specify a custom hex value to send as a\n" +
                 "Virtual Key (VK), Scan Code (SC), or Unicode Codepoint\n\n" +
 
-                "Modifier checkboxes will still be applied.\n\n\n" +
+                "Modifier checkboxes will still be applied.\n\n" +
+
+                "-------------------- Notes --------------------\n\n" +
 
                 "For VK and SC:\n" +
                 "    This should only be 1 byte (2 characters), except\n" +
@@ -745,17 +877,26 @@ namespace F_Key_Sender
                 "    two bytes, starting with E0.\n\n" +
 
                 "For Unicode:\n" +
-                "    This should be a 2-byte UTF-16 code point.\n\n\n" +
+                "    This should be a 4 or 5 character codepoint. If sending\n" +
+                "     a glyph that uses a zero-width joiner like some emojis,\n" +
+                "     all codepoints must be 5 characters.\n\n" +
+
+                "-------------------- Examples --------------------\n\n" +
 
                 "Valid Scan Code & Virtual Key Examples:\n" +
                 "    0x3B\n" +
                 "    0xE05D\n" +
-                "    0x003B  (First 00 will be removed)\n\n" + 
+                "    0x003B  (First 00 will be removed)\n\n" +
 
                 "Valid Unicode Examples:\n" +
                 "    U+0041\n" +
                 "    U+03A9\n" +
-                "    U+1F600\n\n"
+                "    U+1F600\n\n" +
+
+                "Unicode Zero-Width-Joiner Valid Examples:\n" +
+                "    1F468 0200D 1F33E  (Split by spaces)\n" +
+                "    1F4680200D1F33E    (Combined but all are 5 characters)\n" +
+                "    U+1F468 U+0200D U+1F33E  (Split by U+)"
                 ,
                 "Custom Key Code Info",
                 MessageBoxButtons.OK,
@@ -763,6 +904,4 @@ namespace F_Key_Sender
             );
         }
     }
-
-
 }

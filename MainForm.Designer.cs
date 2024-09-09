@@ -65,7 +65,6 @@
             this.checkBoxCtrl = new F_Key_Sender.BigCheckBox();
             this.panelCustomOutline = new System.Windows.Forms.Panel();
             this.labelHexPrefix = new System.Windows.Forms.Label();
-            this.infoCustomCode = new System.Windows.Forms.PictureBox();
             this.radioButtonUnicode = new System.Windows.Forms.RadioButton();
             this.buttonCustomInfo = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudDelay)).BeginInit();
@@ -73,7 +72,6 @@
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.infoKeypressMethod)).BeginInit();
             this.panelCustomOutline.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.infoCustomCode)).BeginInit();
             this.SuspendLayout();
             // 
             // btnF13
@@ -455,8 +453,8 @@
             // panelCustomOutline
             // 
             this.panelCustomOutline.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panelCustomOutline.Controls.Add(this.buttonCustomInfo);
             this.panelCustomOutline.Controls.Add(this.radioButtonUnicode);
-            this.panelCustomOutline.Controls.Add(this.infoCustomCode);
             this.panelCustomOutline.Controls.Add(this.labelHexPrefix);
             this.panelCustomOutline.Controls.Add(this.labelCustom);
             this.panelCustomOutline.Controls.Add(this.radioButtonVK);
@@ -479,17 +477,6 @@
             this.labelHexPrefix.TabIndex = 31;
             this.labelHexPrefix.Text = "0x";
             // 
-            // infoCustomCode
-            // 
-            this.infoCustomCode.Image = ((System.Drawing.Image)(resources.GetObject("infoCustomCode.Image")));
-            this.infoCustomCode.Location = new System.Drawing.Point(107, 101);
-            this.infoCustomCode.Name = "infoCustomCode";
-            this.infoCustomCode.Size = new System.Drawing.Size(16, 16);
-            this.infoCustomCode.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.infoCustomCode.TabIndex = 32;
-            this.infoCustomCode.TabStop = false;
-            this.toolTip1.SetToolTip(this.infoCustomCode, resources.GetString("infoCustomCode.ToolTip"));
-            // 
             // radioButtonUnicode
             // 
             this.radioButtonUnicode.AutoSize = true;
@@ -506,9 +493,9 @@
             // 
             // buttonCustomInfo
             // 
-            this.buttonCustomInfo.Location = new System.Drawing.Point(225, 413);
+            this.buttonCustomInfo.Location = new System.Drawing.Point(110, 93);
             this.buttonCustomInfo.Name = "buttonCustomInfo";
-            this.buttonCustomInfo.Size = new System.Drawing.Size(27, 23);
+            this.buttonCustomInfo.Size = new System.Drawing.Size(20, 29);
             this.buttonCustomInfo.TabIndex = 32;
             this.buttonCustomInfo.Text = "?";
             this.buttonCustomInfo.UseVisualStyleBackColor = true;
@@ -519,7 +506,6 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(427, 481);
-            this.Controls.Add(this.buttonCustomInfo);
             this.Controls.Add(this.infoKeypressMethod);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.statusStrip1);
@@ -558,7 +544,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.infoKeypressMethod)).EndInit();
             this.panelCustomOutline.ResumeLayout(false);
             this.panelCustomOutline.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.infoCustomCode)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -601,7 +586,6 @@
         private System.Windows.Forms.Label labelCustom;
         private System.Windows.Forms.Panel panelCustomOutline;
         private System.Windows.Forms.Label labelHexPrefix;
-        private System.Windows.Forms.PictureBox infoCustomCode;
         private System.Windows.Forms.RadioButton radioButtonUnicode;
         private System.Windows.Forms.Button buttonCustomInfo;
     }
