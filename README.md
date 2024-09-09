@@ -1,7 +1,7 @@
 # F13-F24 Key Sender Tool
  Send keystrokes for F13 to F24 keys via buttons, including with modifiers (Shift, Ctrl, Alt).
 
- Also allows sending custom key codes.
+ Also allows sending custom key codes (see [The Wiki](https://github.com/ThioJoe/F-Key-Sender/wiki) for more info this)
 
 ## Features:
 - Selectable delay before keys are sent (to give you time to move focus to application you want to send the keystrokes to)
