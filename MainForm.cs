@@ -263,7 +263,10 @@ namespace F_Key_Sender
             bool isExtended = false;
             bool scanOnly = false; // Set to true if for the VK code to be ignored (Note, if the VK value needs to be explicitly 0, do not use this)
             ushort[] unicodeCodesArray = null; // Array to hold the UTF-16 code points if customUnicode is true. May contain one ushort, or multiple if a surrogate pair
-            string warningStatus = ""; // Warning message to display in status bar if necessary
+
+            // Status-Related flags for later use
+            bool warnDuplicateUnicode = false; // If true, display a warning about duplicate Unicode code points
+            
 
             // Here the 'codes dictionary is created either way, but values are only assigned if the key exists in keyCodes
             // Otherwise the values will be set later based on the custom flags
@@ -279,12 +282,9 @@ namespace F_Key_Sender
                 // If customUnicode is true, we use the UTF-16 code point of the character as the scan code
                 // If it's a surrogate pair, we need to send both codes separately
                 unicodeCodesArray = UnicodeToUShortArray(key);
-                if (CheckDuplicateUnicodeCodepoints(unicodeCodesArray))
-                {
-                    warningStatus = " + Warning: Duplicate Unicode Codepoints detected.\n" +
-                                    "                                           Only one of each can be sent at a time.";
-                }
 
+                // Check for duplicate Unicode code points besides Zero-Width Joiners, to tell user only one can be printed at a time
+                warnDuplicateUnicode = CheckDuplicateUnicodeCodepoints(unicodeCodesArray);
             }
             else if (customVK)
             {
@@ -398,11 +398,17 @@ namespace F_Key_Sender
                 if (ctrl) keyUpInputs.Add(CreateInput(vk:keyCodes["LCTRL"].vk, scan:keyCodes["LCTRL"].scan, isKeyUp:true, extended:false));
                 //------------------------------------------
 
+                // Count the number of key down and key up inputs that were sent vs how many expected to be sent
+                uint upToSend = (uint)keyUpInputs.Count;
+                uint downToSend = (uint)keyDownInputs.Count;
+                uint upSentCount = 0;
+                uint downSentCount = 0;
+
                 try
                 {
                     // Send key down inputs all at once
                     // SendInput: First parameter is the number of INPUT structures, second is the array of inputs, third is the size of the INPUT struct
-                    SendInput((uint)keyDownInputs.Count, keyDownInputs.ToArray(), Marshal.SizeOf(typeof(INPUT)));
+                    downSentCount = SendInput((uint)keyDownInputs.Count, keyDownInputs.ToArray(), Marshal.SizeOf(typeof(INPUT)));
 
                     // Wait for the key press duration using Task.Delay
                     this.Invoke((MethodInvoker)delegate
@@ -419,7 +425,7 @@ namespace F_Key_Sender
                 finally
                 {
                     // Send key up inputs all at once
-                    SendInput((uint)keyUpInputs.Count, keyUpInputs.ToArray(), Marshal.SizeOf(typeof(INPUT)));
+                    upSentCount = SendInput((uint)keyUpInputs.Count, keyUpInputs.ToArray(), Marshal.SizeOf(typeof(INPUT)));
 
                     // Re-enable all buttons after keys are released
                     this.Invoke((MethodInvoker)delegate
@@ -427,21 +433,59 @@ namespace F_Key_Sender
                         All_Buttons_Enabler();
                         btnCancel.Visible = false;
 
-                        if (string.IsNullOrEmpty(warningStatus))
+                        bool downSendFail = false;
+                        bool upSendFail = false;
+
+                        // Check if the number of key down and key up inputs sent match the number expected to be sent
+                        if (downSentCount != downToSend || upSentCount != upToSend)
                         {
-                            labelToolstripStatus.Text = "Status: Ready";
+                            downSendFail = downSentCount != downToSend;
+                            upSendFail = upSentCount != upToSend;
+
+                            // Construct message based on which side had the issue or both
+                            string message = "Warning: Not all keys sent successfully. Unfortunately Windows does not provide specifics on exactly which keys failed.\n";
+                            if (downSendFail)
+                            {
+                                message += $"Problem sending down inputs.\nExpected: {downToSend}, Sent: {downSentCount}\n\n";
+                            }
+                            if (upSendFail)
+                            {
+                                message += $"Error sending key up inputs.\nExpected: {upToSend}, Sent: {upSentCount}\n\n";
+                            }
+
+                            // Use GetLastError to get the error code
+                            int error = Marshal.GetLastWin32Error();
+
+                            message += $"Error Code: {error}";
+
+                            MessageBox.Show(message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+
+                        // Update status bar text
+                        if (warnDuplicateUnicode)
+                        {
+                            string warningStatus = "Warning: Duplicate Unicode Codepoints detected.\n" +
+                                                   "                 Only one of each can be sent at a time.";
+                            labelToolstripStatus.Text = warningStatus;
+                            labelToolstripStatus.ForeColor = Color.SaddleBrown;
+                            // Increase height of toolstrip to accommodate the warning message
+                            // Count number of newlines in the warning message to determine how much to increase the height
+                            int newLines = warningStatus.Count(c => c == '\n');
+                            statusStrip1.Height = (newLines + 1) * statusBarHeightDefault;
+                        }
+                        else if (!downSendFail && !upSendFail)
+                        {
+                            labelToolstripStatus.Text = "Status: Success";
                             labelToolstripStatus.ForeColor = Color.Black;
                             // Reset height of toolstrip
                             statusStrip1.Height = statusBarHeightDefault;
                         }
                         else
                         {
-                            labelToolstripStatus.Text = "Status: Ready" + warningStatus;
-                            labelToolstripStatus.ForeColor = Color.DarkOrange;
-                            // Increase height of toolstrip to accommodate the warning message
-                            // Count number of newlines in the warning message to determine how much to increase the height
-                            int newLines = warningStatus.Count(c => c == '\n');
-                            statusStrip1.Height = (newLines+1) * statusBarHeightDefault;
+                            labelToolstripStatus.Text = "Status: Ready - Problems Occurred Last Run";
+                            labelToolstripStatus.ForeColor = Color.SaddleBrown;
+                            // Reset height of toolstrip
+                            statusStrip1.Height = statusBarHeightDefault;
                         }
                     });
                 }
@@ -951,7 +995,7 @@ namespace F_Key_Sender
                 ,
                 "Custom Key Code Info",
                 MessageBoxButtons.OK,
-                MessageBoxIcon.Information
+                MessageBoxIcon.None
             );
         }
     }

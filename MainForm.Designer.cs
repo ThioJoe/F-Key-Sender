@@ -64,9 +64,9 @@
             this.checkBoxShift = new F_Key_Sender.BigCheckBox();
             this.checkBoxCtrl = new F_Key_Sender.BigCheckBox();
             this.panelCustomOutline = new System.Windows.Forms.Panel();
-            this.labelHexPrefix = new System.Windows.Forms.Label();
-            this.radioButtonUnicode = new System.Windows.Forms.RadioButton();
             this.buttonCustomInfo = new System.Windows.Forms.Button();
+            this.radioButtonUnicode = new System.Windows.Forms.RadioButton();
+            this.labelHexPrefix = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nudDelay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudDuration)).BeginInit();
             this.statusStrip1.SuspendLayout();
@@ -304,7 +304,7 @@
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.labelToolstripStatus});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 459);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 465);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(427, 22);
             this.statusStrip1.SizingGrip = false;
@@ -313,8 +313,9 @@
             // 
             // labelToolstripStatus
             // 
+            this.labelToolstripStatus.Font = new System.Drawing.Font("Cascadia Mono", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelToolstripStatus.Name = "labelToolstripStatus";
-            this.labelToolstripStatus.Size = new System.Drawing.Size(77, 17);
+            this.labelToolstripStatus.Size = new System.Drawing.Size(98, 17);
             this.labelToolstripStatus.Text = "Status: Ready";
             // 
             // btnCancel
@@ -345,7 +346,7 @@
             // 
             this.textBoxCustomCode.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxCustomCode.Location = new System.Drawing.Point(30, 96);
-            this.textBoxCustomCode.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBoxCustomCode.Margin = new System.Windows.Forms.Padding(2);
             this.textBoxCustomCode.Name = "textBoxCustomCode";
             this.textBoxCustomCode.Size = new System.Drawing.Size(75, 26);
             this.textBoxCustomCode.TabIndex = 25;
@@ -356,7 +357,7 @@
             this.radioButtonVK.AutoSize = true;
             this.radioButtonVK.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioButtonVK.Location = new System.Drawing.Point(26, 33);
-            this.radioButtonVK.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.radioButtonVK.Margin = new System.Windows.Forms.Padding(2);
             this.radioButtonVK.Name = "radioButtonVK";
             this.radioButtonVK.Size = new System.Drawing.Size(78, 20);
             this.radioButtonVK.TabIndex = 26;
@@ -370,7 +371,7 @@
             this.radioButtonSC.AutoSize = true;
             this.radioButtonSC.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioButtonSC.Location = new System.Drawing.Point(26, 53);
-            this.radioButtonSC.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.radioButtonSC.Margin = new System.Windows.Forms.Padding(2);
             this.radioButtonSC.Name = "radioButtonSC";
             this.radioButtonSC.Size = new System.Drawing.Size(79, 20);
             this.radioButtonSC.TabIndex = 27;
@@ -383,7 +384,7 @@
             // 
             this.buttonSendCustomKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.buttonSendCustomKey.Location = new System.Drawing.Point(9, 132);
-            this.buttonSendCustomKey.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonSendCustomKey.Margin = new System.Windows.Forms.Padding(2);
             this.buttonSendCustomKey.Name = "buttonSendCustomKey";
             this.buttonSendCustomKey.Size = new System.Drawing.Size(117, 27);
             this.buttonSendCustomKey.TabIndex = 29;
@@ -467,15 +468,15 @@
             this.panelCustomOutline.Size = new System.Drawing.Size(137, 175);
             this.panelCustomOutline.TabIndex = 31;
             // 
-            // labelHexPrefix
+            // buttonCustomInfo
             // 
-            this.labelHexPrefix.AutoSize = true;
-            this.labelHexPrefix.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelHexPrefix.Location = new System.Drawing.Point(5, 99);
-            this.labelHexPrefix.Name = "labelHexPrefix";
-            this.labelHexPrefix.Size = new System.Drawing.Size(27, 19);
-            this.labelHexPrefix.TabIndex = 31;
-            this.labelHexPrefix.Text = "0x";
+            this.buttonCustomInfo.Location = new System.Drawing.Point(110, 93);
+            this.buttonCustomInfo.Name = "buttonCustomInfo";
+            this.buttonCustomInfo.Size = new System.Drawing.Size(20, 29);
+            this.buttonCustomInfo.TabIndex = 32;
+            this.buttonCustomInfo.Text = "?";
+            this.buttonCustomInfo.UseVisualStyleBackColor = true;
+            this.buttonCustomInfo.Click += new System.EventHandler(this.buttonCustomInfo_Click);
             // 
             // radioButtonUnicode
             // 
@@ -491,21 +492,21 @@
             this.radioButtonUnicode.UseVisualStyleBackColor = true;
             this.radioButtonUnicode.CheckedChanged += new System.EventHandler(this.radioButtonUnicode_CheckedChanged);
             // 
-            // buttonCustomInfo
+            // labelHexPrefix
             // 
-            this.buttonCustomInfo.Location = new System.Drawing.Point(110, 93);
-            this.buttonCustomInfo.Name = "buttonCustomInfo";
-            this.buttonCustomInfo.Size = new System.Drawing.Size(20, 29);
-            this.buttonCustomInfo.TabIndex = 32;
-            this.buttonCustomInfo.Text = "?";
-            this.buttonCustomInfo.UseVisualStyleBackColor = true;
-            this.buttonCustomInfo.Click += new System.EventHandler(this.buttonCustomInfo_Click);
+            this.labelHexPrefix.AutoSize = true;
+            this.labelHexPrefix.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelHexPrefix.Location = new System.Drawing.Point(5, 99);
+            this.labelHexPrefix.Name = "labelHexPrefix";
+            this.labelHexPrefix.Size = new System.Drawing.Size(27, 19);
+            this.labelHexPrefix.TabIndex = 31;
+            this.labelHexPrefix.Text = "0x";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(427, 481);
+            this.ClientSize = new System.Drawing.Size(427, 487);
             this.Controls.Add(this.infoKeypressMethod);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.statusStrip1);
