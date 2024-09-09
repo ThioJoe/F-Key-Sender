@@ -646,18 +646,21 @@ namespace F_Key_Sender
         private void radioButtonSC_CheckedChanged(object sender, EventArgs e)
         {
             updateHexLabel();
+            NormalizeTextBoxText();
         }
 
         // Radio button to choose to use custom VK (virtual key) code in textBoxCustomCode
         private void radioButtonVK_CheckedChanged(object sender, EventArgs e)
         {
             updateHexLabel();
+            NormalizeTextBoxText();
         }
 
         // Radio button to choose to use a unicode code in textBoxCustomCode
         private void radioButtonUnicode_CheckedChanged(object sender, EventArgs e)
         {
             updateHexLabel();
+            NormalizeTextBoxText();
         }
 
         private void textBoxCustomCode_TextChanged(object sender, EventArgs e)
@@ -674,6 +677,11 @@ namespace F_Key_Sender
                 buttonSendCustomKey.Enabled = true;
             }
 
+            NormalizeTextBoxText();
+        }
+
+        private void NormalizeTextBoxText()
+        {
             // Set string to process
             string inputString = textBoxCustomCode.Text.ToUpper();
 
