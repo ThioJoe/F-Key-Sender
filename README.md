@@ -15,8 +15,9 @@
 
 ## Screenshot:
 <p align="center">
-<img width="500" alt="F-Key Sender Window" src="https://github.com/user-attachments/assets/2a5d0596-1215-4c8d-b0a5-f343a946dce0">
+<img width="500" alt="F-Key Sender Window" src="https://github.com/user-attachments/assets/1b2f380b-e1e7-4528-a10e-a1a7c1a009c5">
 </p>
+
 
 ## Why?
 
