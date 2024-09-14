@@ -16,7 +16,7 @@ namespace F_Key_Sender
 {
     public partial class MainForm : Form
     {
-        const string VERSION = "1.1.0";
+        const string VERSION = "1.1.1";
 
         // Dictionary to store virtual key codes and scan codes. Will want to use wscan codes for SendInput
         private static readonly Dictionary<string, (ushort vk, ushort scan)> keyCodes = new Dictionary<string, (ushort, ushort)>
