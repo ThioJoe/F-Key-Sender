@@ -16,7 +16,7 @@ namespace F_Key_Sender
 {
     public partial class MainForm : Form
     {
-        const string VERSION = "1.1.1";
+        const string VERSION = "1.1.2";
 
         // Dictionary to store virtual key codes and scan codes. Will want to use wscan codes for SendInput
         private static readonly Dictionary<string, (ushort vk, ushort scan)> keyCodes = new Dictionary<string, (ushort, ushort)>
@@ -836,10 +836,23 @@ namespace F_Key_Sender
             // Or if it's 6 characters and starts with a zero, remove the zero and return
             else if (inputNoSpaces.Length == 6 && inputNoSpaces.StartsWith("0"))
             {
-                return inputNoSpaces.Substring(1);
+                if (int.TryParse(inputNoSpaces.Substring(1), System.Globalization.NumberStyles.HexNumber, null, out int testCodePoint) && testCodePoint >= 0x00000 && testCodePoint <= 0xFFFFF)
+                {
+                    return inputNoSpaces.Substring(1);
+                }
+                    
+            }
+            // If it's 6 characters and doesn't start with a zero, check if it's a valid codepoint
+            else if (inputNoSpaces.Length == 6)
+            {
+                // Check if it's a valid codepoint and return if so.
+                if (int.TryParse(inputNoSpaces, System.Globalization.NumberStyles.HexNumber, null, out int testCodePoint) && testCodePoint >= 0x00000 && testCodePoint <= 0x10FFFF)
+                {
+                    return inputNoSpaces;
+                }
             }
 
-            // If input is longer than 5 characters, we can assume it's a zero-width joiner, so we must find a way to split each glyph and convert each codepoint to 5 characters
+            // If input is longer than 6 characters, we can assume it's a zero-width joiner, so we must find a way to split each glyph and convert each codepoint to 5 characters
             // Check if "U+" is present, because the beginning would have already been stripped, so if it's still present we can use it to split the string
             if (input.Contains("U+"))
             {
@@ -930,7 +943,26 @@ namespace F_Key_Sender
         {
             List<ushort> result = new List<ushort>();
 
-            int chunkSize = input.Length > 4 ? 5 : 4;
+            int chunkSize;
+
+            // We will default to 4 characters, but if it's 5 or 6, we will adjust the chunk size to allow for single larger code points
+            // More than 6 though will require splitting to surrogate pairs or ZWJ codepoints
+
+            // If length is exactly 6, assume top end code point and set chunk size to 6
+            if (input.Length == 6)
+            {
+                chunkSize = 6;
+            }
+            // If it's greater than 4 (but not 6 because we already checked that) set chunk size to 5
+            else if (input.Length >= 5)
+            {
+                chunkSize = 5;
+            }
+            // If it's less than 5 characters, or greater than 6, just set chunk size to 4. Any other cases must have the multiple codepoints in 4-character format
+            else
+            {
+                chunkSize = 4;
+            }
 
             // Process the input in chunks of 4 or 5 characters (4 for BMP, 5 for higher planes)
             for (int i = 0; i < input.Length; i += chunkSize)
@@ -944,15 +976,37 @@ namespace F_Key_Sender
                 }
 
                 // Convert the code point to UTF-16
-                string utf16String = char.ConvertFromUtf32(codePoint);
+                string utf16String = ConvertUTF32toUTF16(codePoint);
 
-                // Add each UTF-16 character to the result
+                // Add each UTF-16 character to the result. This will also split to array if it's a surrogate pair
                 result.AddRange(utf16String.Select(c => (ushort)c));
             }
 
             ushort[] finalArray = result.ToArray();
 
             return finalArray;
+        }
+
+        private static string ConvertUTF32toUTF16(int codePoint)
+        {
+            if (codePoint < 0 || codePoint > 0x10FFFF)
+            {
+                throw new ArgumentOutOfRangeException(nameof(codePoint), "Invalid Unicode code point");
+            }
+
+            if (codePoint <= 0xFFFF)
+            {
+                // BMP character
+                return ((char)codePoint).ToString();
+            }
+            else
+            {
+                // Supplementary character, needs surrogate pair
+                int adjusted = codePoint - 0x10000;
+                char highSurrogate = (char)((adjusted >> 10) + 0xD800);
+                char lowSurrogate = (char)((adjusted & 0x3FF) + 0xDC00);
+                return new string(new[] { highSurrogate, lowSurrogate });
+            }
         }
 
         // Check if there are any duplicate Unicode code points in the array that are not zero-width joiners
@@ -987,9 +1041,11 @@ namespace F_Key_Sender
                 "    two bytes, starting with E0.\n\n" +
 
                 "For Unicode:\n" +
-                "    This should be a 4 or 5 character codepoint. If sending\n" +
-                "     a glyph that uses a zero-width joiner like some emojis,\n" +
-                "     all codepoints must be 5 characters or split by spaces or U+.\n\n" + 
+                "    This should be a 4, 5, or 6 character codepoint. If sending\n" +
+                "    a glyph that uses a zero-width joiner like some emojis,\n" +
+                "    all codepoints must be 5 characters or split by spaces or U+.\n\n" +
+                "    Note: If sending multiple characters above U+100000, you must split" +
+                "    each character into its surrogate pairs first.\n\n" + 
 
                 "-------------------- Examples --------------------\n\n" +
 
