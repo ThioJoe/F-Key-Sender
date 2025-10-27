@@ -16,27 +16,32 @@ namespace F_Key_Sender
 {
     public partial class MainForm : Form
     {
-        const string VERSION = "1.1.2";
+        const string VERSION = "1.2.0";
 
         // Dictionary to store virtual key codes and scan codes. Will want to use wscan codes for SendInput
         private static readonly Dictionary<string, (ushort vk, ushort scan)> keyCodes = new Dictionary<string, (ushort, ushort)>
         {
-            {"F13", (0x7C, 100)},
-            {"F14", (0x7D, 101)},
-            {"F15", (0x7E, 102)},
-            {"F16", (0x7F, 103)},
-            {"F17", (0x80, 104)},
-            {"F18", (0x81, 105)},
-            {"F19", (0x82, 106)},
-            {"F20", (0x83, 107)},
-            {"F21", (0x84, 108)},
-            {"F22", (0x85, 109)},
-            {"F23", (0x86, 110)},
-            {"F24", (0x87, 118)},
-            {"LCTRL", (0x11, 29)},
-            {"LSHIFT", (0x10, 42)},
-            {"LALT", (0x12, 56)},
-            {"X", (0x58, 45)}
+            {"F13", (0x7C, 0x0064)},
+            {"F14", (0x7D, 0x0065)},
+            {"F15", (0x7E, 0x0066)},
+            {"F16", (0x7F, 0x0067)},
+            {"F17", (0x80, 0x0068)},
+            {"F18", (0x81, 0x0069)},
+            {"F19", (0x82, 0x006A)},
+            {"F20", (0x83, 0x006B)},
+            {"F21", (0x84, 0x006C)},
+            {"F22", (0x85, 0x006D)},
+            {"F23", (0x86, 0x006E)},
+            {"F24", (0x87, 0x0076)},
+            {"RCTRL", (0xA3, 0xE01D)},
+            {"LCTRL", (0x11, 0x001D)},
+            {"RSHIFT",(0xA1, 0x0036)},
+            {"LSHIFT",(0x10, 0x002A)},
+            {"RALT",  (0xA5, 0xE038)},
+            {"LALT",  (0x12, 0x0038)},
+            {"LWIN",  (0x5B, 0xE05B)},
+            {"RWIN",  (0x5C, 0xE05C)},
+            {"X", (0x58, 0x002D)} // For testing
         };
 
         // Flags for KEYBDINPUT structure used in API calls
@@ -73,9 +78,26 @@ namespace F_Key_Sender
 
         private async void SendKeyCombo(string key, bool customVK = false, bool customSC = false, bool customUnicode = false)
         {
-            bool ctrl = checkBoxCtrl.Checked;
-            bool shift = checkBoxShift.Checked;
-            bool alt = checkBoxAlt.Checked;
+            bool lctrl = checkBoxLCtrl.Checked;
+            bool lshift = checkBoxLShift.Checked;
+            bool lalt = checkBoxLAlt.Checked;
+            bool rctrl = checkBoxRCtrl.Checked;
+            bool rshift = checkBoxRShift.Checked;
+            bool ralt = checkBoxRAlt.Checked;
+            bool lwin = checkBoxLWin.Checked;
+            bool rwin = checkBoxRWin.Checked;
+
+            // Build the list of modifiers
+            List<(ushort vk, ushort scan)> modKeys = new();
+            if (lctrl)  modKeys.Add((vk: keyCodes["LCTRL"].vk, scan: keyCodes["LCTRL"].scan));
+            if (lshift) modKeys.Add((vk: keyCodes["LSHIFT"].vk, scan: keyCodes["LSHIFT"].scan));
+            if (lalt)   modKeys.Add((vk: keyCodes["LALT"].vk, scan: keyCodes["LALT"].scan));
+            if (lwin)   modKeys.Add((vk: keyCodes["LWIN"].vk, scan: keyCodes["LWIN"].scan));
+
+            if (rctrl)  modKeys.Add((vk: keyCodes["RCTRL"].vk, scan: keyCodes["RCTRL"].scan));
+            if (rshift) modKeys.Add((vk: keyCodes["RSHIFT"].vk, scan: keyCodes["RSHIFT"].scan));
+            if (ralt)   modKeys.Add((vk: keyCodes["RALT"].vk, scan: keyCodes["RALT"].scan));
+            if (rwin)   modKeys.Add((vk: keyCodes["RWIN"].vk, scan: keyCodes["RWIN"].scan));
 
             // Enable cancel button even though not visible yet
             btnCancel.Enabled = true;
@@ -86,11 +108,11 @@ namespace F_Key_Sender
             {
                 if (dropdownMethod.SelectedIndex == 0) // SendInput
                 {
-                    await SendKey_Method_SendInputAsync(key, ctrl, shift, alt, customVK, customSC, customUnicode, _cts.Token);
+                    await SendKey_Method_SendInputAsync(key, customVK, customSC, customUnicode, modKeys, _cts.Token);
                 }
                 else if (dropdownMethod.SelectedIndex == 1) // keybd_event
                 {
-                    await SendKey_keybd_eventAsync(key, ctrl, shift, alt, customVK, customSC, _cts.Token);
+                    await SendKey_keybd_eventAsync(key, customVK, customSC, modKeys, _cts.Token);
                 }
             }
             catch (OperationCanceledException)
@@ -112,7 +134,7 @@ namespace F_Key_Sender
         [DllImport("user32.dll")]
         static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
 
-        private async Task SendKey_keybd_eventAsync(string key, bool ctrl, bool shift, bool alt, bool customVK, bool customSC, CancellationToken ct)
+        private async Task SendKey_keybd_eventAsync(string key, bool customVK, bool customSC, List<(ushort vk, ushort scan)> modKeys, CancellationToken ct)
         {
             bool isExtended = false;
             ushort keyHex = 0;
@@ -170,9 +192,12 @@ namespace F_Key_Sender
                 try
                 {
                     // Press modifier keys
-                    if (ctrl) keybd_event(0x11, 29, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
-                    if (shift) keybd_event(0x10, 42, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
-                    if (alt) keybd_event(0x12, 56, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
+                    foreach ((ushort vk, ushort scan) in modKeys)
+                    {
+                        uint extendedFlag = (scan >= 0xE000) ? KEYEVENTF_EXTENDEDKEY : 0;
+                        byte actualScanCode = (byte)scan; // Only get the right byte (the least significant one)
+                        keybd_event((byte)vk, actualScanCode, KEYEVENTF_KEYDOWN | extendedFlag, UIntPtr.Zero);
+                    }
 
                     // Send the down key event for main key
                     // keybd_event: First parameter is the virtual key code, second is the scan code, third is the flags, fourth is the extra info
@@ -196,9 +221,12 @@ namespace F_Key_Sender
                     keybd_event(virtualKeyCode, scanCode, keydwFlagsUp, UIntPtr.Zero);
 
                     // Release modifier keys
-                    if (alt) keybd_event(0x12, 56, KEYEVENTF_KEYUP, UIntPtr.Zero);
-                    if (shift) keybd_event(0x10, 42, KEYEVENTF_KEYUP, UIntPtr.Zero);
-                    if (ctrl) keybd_event(0x11, 29, KEYEVENTF_KEYUP, UIntPtr.Zero);
+                    foreach ((ushort vk, ushort scan) in modKeys.AsEnumerable().Reverse())
+                    {
+                        uint extendedFlag = (scan >= 0xE000) ? KEYEVENTF_EXTENDEDKEY : 0;
+                        byte actualScanCode = (byte)scan; // Only get the right byte (the least significant one)
+                        keybd_event((byte)vk, actualScanCode, KEYEVENTF_KEYUP | extendedFlag, UIntPtr.Zero);
+                    }
 
                     // Re-enable all buttons after keys are released
                     this.Invoke((MethodInvoker)delegate
@@ -264,7 +292,7 @@ namespace F_Key_Sender
         }
 
         // Bypassing SendKeys and directly using SendInput due to limitations of F17 through F24 in .NET's SendKeys
-        private async Task SendKey_Method_SendInputAsync(string key, bool ctrl, bool shift, bool alt, bool customVK, bool customSC, bool customUnicode, CancellationToken ct)
+        private async Task SendKey_Method_SendInputAsync(string key, bool customVK, bool customSC, bool customUnicode, List<(ushort vk, ushort scan)> modKeys, CancellationToken ct)
         {
             ushort keyHex = 0;
             bool isExtended = false;
@@ -371,9 +399,11 @@ namespace F_Key_Sender
                 List<INPUT> keyUpInputs = new List<INPUT>();
 
                 // -------- Add Key Down For Modifiers --------
-                if (ctrl) keyDownInputs.Add(CreateInput(vk:keyCodes["LCTRL"].vk, scan:keyCodes["LCTRL"].scan, isKeyUp:false, extended:false));
-                if (shift) keyDownInputs.Add(CreateInput(vk:keyCodes["LSHIFT"].vk, scan:keyCodes["LSHIFT"].scan, isKeyUp:false, extended:false));
-                if (alt) keyDownInputs.Add(CreateInput(vk:keyCodes["LALT"].vk, scan:keyCodes["LALT"].scan, isKeyUp:false, extended:false));
+                foreach ((ushort vk, ushort scan) in modKeys)
+                {
+                    bool isExtendedModKey = scan >= 0xE000;
+                    keyDownInputs.Add(CreateInput(vk: vk, scan: scan, isKeyUp: false, extended: isExtendedModKey));
+                }
                 //---------------------------------------------
 
                 // -------- Add Key Down and Up Events For Main Key --------               
@@ -400,9 +430,12 @@ namespace F_Key_Sender
                 //-------------------------------------------------
 
                 // -------- Add Key Up For Modifiers --------
-                if (alt) keyUpInputs.Add(CreateInput(vk:keyCodes["LALT"].vk, scan: keyCodes["LALT"].scan, isKeyUp:true, extended:false));
-                if (shift) keyUpInputs.Add(CreateInput(vk:keyCodes["LSHIFT"].vk, scan:keyCodes["LSHIFT"].scan, isKeyUp:true, extended:false));
-                if (ctrl) keyUpInputs.Add(CreateInput(vk:keyCodes["LCTRL"].vk, scan:keyCodes["LCTRL"].scan, isKeyUp:true, extended:false));
+                // Release modifiers in reverse order. Add to keyUpInputs list.
+                foreach ((ushort vk, ushort scan) in modKeys.AsEnumerable().Reverse())
+                {
+                    bool isExtendedModKey = scan >= 0xE000;
+                    keyUpInputs.Add(CreateInput(vk: vk, scan: scan, isKeyUp: true, extended: isExtendedModKey));
+                }
                 //------------------------------------------
 
                 // Count the number of key down and key up inputs that were sent vs how many expected to be sent
@@ -522,9 +555,14 @@ namespace F_Key_Sender
             btnTestX.Enabled = false;
 
             // Disable checkboxes
-            checkBoxAlt.Enabled = false;
-            checkBoxCtrl.Enabled = false;
-            checkBoxShift.Enabled = false;
+            checkBoxLAlt.Enabled = false;
+            checkBoxRAlt.Enabled = false;
+            checkBoxLCtrl.Enabled = false;
+            checkBoxRCtrl.Enabled = false;
+            checkBoxLShift.Enabled = false;
+            checkBoxRShift.Enabled = false;
+            checkBoxLWin.Enabled = false;
+            checkBoxRWin.Enabled = false;
 
             // Disable numeric updowns
             nudDelay.Enabled = false;
@@ -532,6 +570,9 @@ namespace F_Key_Sender
 
             // Disable dropdown
             dropdownMethod.Enabled = false;
+
+            // Disable Custom Code Controls
+            panelCustomOutline.Enabled = false;
         }
 
         private void All_Buttons_Enabler()
@@ -552,9 +593,14 @@ namespace F_Key_Sender
             btnTestX.Enabled = true;
 
             // Enable checkboxes
-            checkBoxAlt.Enabled = true;
-            checkBoxCtrl.Enabled = true;
-            checkBoxShift.Enabled = true;
+            checkBoxLAlt.Enabled = true;
+            checkBoxRAlt.Enabled = true;
+            checkBoxLCtrl.Enabled = true;
+            checkBoxRCtrl.Enabled = true;
+            checkBoxLShift.Enabled = true;
+            checkBoxRShift.Enabled = true;
+            checkBoxLWin.Enabled = true;
+            checkBoxRWin.Enabled = true;
 
             // Enable numeric updowns
             nudDelay.Enabled = true;
@@ -562,6 +608,9 @@ namespace F_Key_Sender
 
             // Enable dropdown
             dropdownMethod.Enabled = true;
+
+            // Enable Custom Code Controls
+            panelCustomOutline.Enabled = true;
         }
 
 
@@ -1094,7 +1143,10 @@ namespace F_Key_Sender
                 string warningMessage = $"WARNING: Version mismatch detected!\n" +
                                         $"Expected version: {VERSION}\n" +
                                         $"Assembly version: {assemblyVersion}\n" +
-                                        $"File version: {fileVersion}";
+                                        $"File version: {fileVersion}" +
+                                        $"\n\n" +
+                                        $"Make sure the VERSION constant in the source code matches the version set in the project/assembly properties"
+                                        ;
 
                 Debug.WriteLine(warningMessage);
                 MessageBox.Show(warningMessage, "Version Mismatch",
