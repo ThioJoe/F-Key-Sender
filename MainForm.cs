@@ -140,13 +140,13 @@ namespace F_Key_Sender
             ushort keyHex = 0;
             byte virtualKeyCode = 0;
             byte scanCode = 0;
-            uint keydwFlagsDown = 0;
+            uint keydwFlagsDown = KEYEVENTF_KEYDOWN;
             uint keydwFlagsUp = KEYEVENTF_KEYUP;
 
             if (customVK)
             {
                 (keyHex, isExtended) = StringToUShort(key);
-                virtualKeyCode = BitConverter.GetBytes(keyHex)[0];
+                virtualKeyCode = (byte)keyHex;
 
                 // If the key is extended, set the extended key flag
                 if (isExtended)
@@ -158,7 +158,9 @@ namespace F_Key_Sender
             else if (customSC)
             {
                 (keyHex, isExtended) = StringToUShort(key);
-                scanCode = BitConverter.GetBytes(keyHex)[0];
+                scanCode = (byte)keyHex;
+                keydwFlagsDown |= KEYEVENTF_SCANCODE; // Required to use scan codes
+                keydwFlagsUp |= KEYEVENTF_SCANCODE;   // Required to use scan codes
 
                 // If the key is extended, set the extended key flag
                 if (isExtended)
@@ -169,8 +171,14 @@ namespace F_Key_Sender
             }
             else
             {
-                virtualKeyCode = BitConverter.GetBytes(keyCodes[key].vk)[0];
-                scanCode = BitConverter.GetBytes(keyCodes[key].scan)[0];
+                virtualKeyCode = (byte)keyCodes[key].vk;
+                scanCode = (byte)keyCodes[key].scan;
+                // Check for extended key from dictionary and add flag
+                if (keyCodes[key].scan >= 0xE000)
+                {
+                    keydwFlagsDown |= KEYEVENTF_EXTENDEDKEY;
+                    keydwFlagsUp |= KEYEVENTF_EXTENDEDKEY;
+                }
             }
 
             await Task.Run(async () =>
@@ -301,14 +309,14 @@ namespace F_Key_Sender
 
             // Status-Related flags for later use
             bool warnDuplicateUnicode = false; // If true, display a warning about duplicate Unicode code points
-            
+
 
             // Here the 'codes dictionary is created either way, but values are only assigned if the key exists in keyCodes
             // Otherwise the values will be set later based on the custom flags
             if (keyCodes.TryGetValue(key.ToUpper(), out var codes))
             {
-                // If the key exists in keyCodes, use its vk and scan codes
-                // No further action is needed here as 'codes' now contains the correct values
+                // If the key exists in keyCodes, check if it's an extended key
+                isExtended = codes.scan >= 0xE000;
             }
 
             // Deal with custom key codes
@@ -387,7 +395,7 @@ namespace F_Key_Sender
                     labelToolstripStatus.ForeColor = Color.Purple;
                     statusStrip1.Height = statusBarHeightDefault;
                     btnCancel.Visible = true;
-                    
+
                 });
 
                 await Task.Delay((int)nudDelay.Value * 1000, ct);
@@ -419,7 +427,7 @@ namespace F_Key_Sender
                     foreach (ushort unicodeCode in unicodeCodesArray)
                     {
                         keyDownInputs.Add(CreateInput(vk: 0, scan: unicodeCode, isKeyUp: false, extended: false, scanFlag: false, unicodeFlag: true));
-                        
+
                     }
                     // Key Up
                     foreach (ushort unicodeCode in unicodeCodesArray)
@@ -505,7 +513,7 @@ namespace F_Key_Sender
                         if (warnDuplicateUnicode)
                         {
                             string warningStatus = "Warning: Duplicate Unicode Codepoints detected.\n" +
-                                                   "                 Only one of each can be sent at a time.";
+                                           "                 Only one of each can be sent at a time.";
                             labelToolstripStatus.Text = warningStatus;
                             labelToolstripStatus.ForeColor = Color.SaddleBrown;
                             // Increase height of toolstrip to accommodate the warning message
